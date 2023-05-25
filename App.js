@@ -1,106 +1,148 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
-  SafeAreaView,
   StyleSheet,
   ScrollView,
   View,
   Text,
-  StatusBar,
+  NativeModules,
+  Dimensions,
+  Modal,
+  TouchableOpacity,
+  Pressable,
+  requireNativeComponent,
 } from 'react-native';
 
-import {
-  Header,
-  LearnMoreLinks,
-  Colors,
-  DebugInstructions,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+import { Colors } from 'react-native/Libraries/NewAppScreen';
 
-const App: () => React$Node = () => {
+const { PkgManager } = NativeModules;
+const AppIconView = requireNativeComponent('AppIconView');
+
+const App = () => {
+  const [appList, setAppList] = useState([]);
+  const [showAppInfo, setShowAppInfo] = useState(false);
+  const [padding, setPadding] = useState(0);
+
+  useEffect(() => {
+    PkgManager.getAppList((result) => {
+      setAppList(result);
+    });
+    const { width } = Dimensions.get('window');
+    const appCountPerLine = Math.floor(width / 110);
+    const bodyPadding = (width - appCountPerLine * 110) / 2;
+    setPadding(bodyPadding);
+  }, []);
+
+  const handleStartApp = (appInfo) => {
+    PkgManager.launchApp(appInfo.packageName);
+  };
+
+  const handleShowAppInfo = (appInfo) => {
+    console.info('info: appInfo', appInfo);
+    setShowAppInfo(appInfo);
+  };
+
+  const handleUninstallApp = (appInfo) => {
+    console.info('info: uninstall', appInfo);
+  }
+
+  const handleHideApp = (appInfo) => {
+    console.info('info: hide', appInfo);
+  }
+
   return (
-    <>
-      <StatusBar barStyle="dark-content" />
-      <SafeAreaView>
-        <ScrollView
-          contentInsetAdjustmentBehavior="automatic"
-          style={styles.scrollView}>
-          <Header />
-          {global.HermesInternal == null ? null : (
-            <View style={styles.engine}>
-              <Text style={styles.footer}>Engine: Hermes</Text>
-            </View>
-          )}
-          <View style={styles.body}>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Step One</Text>
-              <Text style={styles.sectionDescription}>
-                Edit <Text style={styles.highlight}>App.js</Text> to change this
-                screen and then come back to see your edits.
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>See Your Changes</Text>
-              <Text style={styles.sectionDescription}>
-                <ReloadInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Debug</Text>
-              <Text style={styles.sectionDescription}>
-                <DebugInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Learn More</Text>
-              <Text style={styles.sectionDescription}>
-                Read the docs to discover what to do next:
-              </Text>
-            </View>
-            <LearnMoreLinks />
-          </View>
-        </ScrollView>
-      </SafeAreaView>
-    </>
+      <ScrollView
+        contentInsetAdjustmentBehavior="automatic"
+        style={styles.scrollView}
+      >
+        <View style={{ ...styles.body, paddingHorizontal: padding }}>
+          {appList.map((appInfo) => (
+            <Pressable
+              onPress={() => handleStartApp(appInfo)}
+              onLongPress={() => handleShowAppInfo(appInfo)}
+              key={appInfo.packageName}
+            >
+              <View style={styles.appCard}>
+                <View style={styles.appInner}>
+                  <AppIconView
+                    style={styles.appIcon}
+                    packageName={appInfo.packageName}
+                  />
+                  <Text style={styles.appName} numberOfLines={2}>
+                    {appInfo.iconPath}
+                  </Text>
+                  <Text style={styles.appName} numberOfLines={2}>
+                    {appInfo.appName}
+                  </Text>
+                </View>
+              </View>
+            </Pressable>
+          ))}
+        </View>
+        <View style={styles.centerView}>
+          <Modal animationType="none" visible={!!showAppInfo} style={styles.modal}>
+            <AppIconView
+              style={styles.appIcon}
+              packageName={showAppInfo.packageName}
+            />
+            <Text>{showAppInfo.packageName}</Text>
+            <TouchableOpacity onPress={() => handleUninstallApp(showAppInfo)}>
+              <Text>卸载</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => handleHideApp(showAppInfo)}>
+              <Text>隐藏</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => setShowAppInfo(false)}>
+              <Text>关闭</Text>
+            </TouchableOpacity>
+          </Modal>
+        </View>
+      </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   scrollView: {
-    backgroundColor: Colors.lighter,
-  },
-  engine: {
-    position: 'absolute',
-    right: 0,
+    backgroundColor: Colors.white,
   },
   body: {
     backgroundColor: Colors.white,
+    flexDirection: 'row',
+    width: '100%',
+    flexWrap: 'wrap',
   },
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
+  appCard: {
+    width: 110,
+    height: 110,
+    padding: 5,
   },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-    color: Colors.black,
+  appInner: {
+    width: '100%',
+    height: '100%',
+    overflow: 'hidden',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    paddingVertical: 10,
   },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-    color: Colors.dark,
+  appIcon: {
+    width: 50,
+    height: 50,
   },
-  highlight: {
-    fontWeight: '700',
+  appName: {
+    fontSize: 10,
   },
-  footer: {
-    color: Colors.dark,
-    fontSize: 12,
-    fontWeight: '600',
-    padding: 4,
-    paddingRight: 12,
-    textAlign: 'right',
+  centerView: {
+    flex: 1,
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
+  modal: {
+    width: 200,
+    height: 150,
+    backgroundColor: 'rgba(0, 0, 0, 0)',
+  }
 });
 
 export default App;
