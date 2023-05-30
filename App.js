@@ -6,11 +6,11 @@ import {
   Text,
   NativeModules,
   Dimensions,
-  Modal,
   TouchableOpacity,
   Pressable,
   requireNativeComponent,
 } from 'react-native';
+import Modal from './react/components/modal';
 
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 
@@ -50,18 +50,40 @@ const App = () => {
   }
 
   return (
+    <View style={styles.main}>
+      {
+        showAppInfo && (
+          <Modal>
+            <View style={styles.modal}>
+              <AppIconView
+                style={styles.appIcon}
+                packageName={showAppInfo.packageName}
+              />
+              <Text>{showAppInfo.packageName}</Text>
+              <TouchableOpacity onPress={() => handleUninstallApp(showAppInfo)}>
+                <Text>卸载</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => handleHideApp(showAppInfo)}>
+                <Text>隐藏</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => setShowAppInfo(false)}>
+                <Text>关闭</Text>
+              </TouchableOpacity>
+            </View>
+          </Modal>
+        )
+      }
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         style={styles.scrollView}
       >
         <View style={{ ...styles.body, paddingHorizontal: padding }}>
           {appList.map((appInfo) => (
-            <Pressable
-              onPress={() => handleStartApp(appInfo)}
-              onLongPress={() => handleShowAppInfo(appInfo)}
-              key={appInfo.packageName}
-            >
-              <View style={styles.appCard}>
+            <View style={styles.appCard} key={appInfo.packageName}>
+              <Pressable
+                onPress={() => handleStartApp(appInfo)}
+                onLongPress={() => handleShowAppInfo(appInfo)}
+              >
                 <View style={styles.appInner}>
                   <AppIconView
                     style={styles.appIcon}
@@ -74,35 +96,24 @@ const App = () => {
                     {appInfo.appName}
                   </Text>
                 </View>
-              </View>
-            </Pressable>
+              </Pressable>
+            </View>
           ))}
         </View>
-        <View style={styles.centerView}>
-          <Modal animationType="none" visible={!!showAppInfo} style={styles.modal}>
-            <AppIconView
-              style={styles.appIcon}
-              packageName={showAppInfo.packageName}
-            />
-            <Text>{showAppInfo.packageName}</Text>
-            <TouchableOpacity onPress={() => handleUninstallApp(showAppInfo)}>
-              <Text>卸载</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => handleHideApp(showAppInfo)}>
-              <Text>隐藏</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => setShowAppInfo(false)}>
-              <Text>关闭</Text>
-            </TouchableOpacity>
-          </Modal>
-        </View>
       </ScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  main: {
+    flex: 1,
+    position: 'relative',
+    backgroundColor: Colors.white,
+  },
   scrollView: {
     backgroundColor: Colors.white,
+    flex: 1,
   },
   body: {
     backgroundColor: Colors.white,
@@ -114,6 +125,8 @@ const styles = StyleSheet.create({
     width: 110,
     height: 110,
     padding: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   appInner: {
     width: '100%',
@@ -139,9 +152,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   modal: {
-    width: 200,
     height: 150,
-    backgroundColor: 'rgba(0, 0, 0, 0)',
+    width: 200,
+    backgroundColor: Colors.white,
+    borderWidth: 1,
+    borderRadius: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
   }
 });
 
