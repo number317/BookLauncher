@@ -1,21 +1,20 @@
 package com.booklauncher.module;
+
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.util.Base64;
+import android.net.Uri;
 import android.util.Log;
 import androidx.annotation.NonNull;
 import com.facebook.react.bridge.*;
 
-import java.io.ByteArrayOutputStream;
 import java.util.List;
 
 public class AppManager extends ReactContextBaseJavaModule {
     private final ReactApplicationContext rnContext;
+    private AppStatusBroadcastReceiver appStatusReceiver;
 
     @NonNull
     @Override
@@ -56,6 +55,36 @@ public class AppManager extends ReactContextBaseJavaModule {
         intent = packageManager.getLaunchIntentForPackage(packageName);
         if (intent != null) {
             this.rnContext.startActivity(intent);
+        }
+    }
+
+    @ReactMethod
+    public void uninstallApp(String packageName) {
+        Uri packageUri = Uri.parse("package:" + packageName);
+        Intent uninstallIntent = new Intent(Intent.ACTION_UNINSTALL_PACKAGE, packageUri);
+        uninstallIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        getCurrentActivity().startActivity(uninstallIntent);
+    }
+
+    @ReactMethod
+    public void registerAppStatusListener() {
+        this.appStatusReceiver = new AppStatusBroadcastReceiver(this.rnContext);
+
+        // 注册广播接收器
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(Intent.ACTION_PACKAGE_ADDED);
+        intentFilter.addAction(Intent.ACTION_PACKAGE_REPLACED);
+        intentFilter.addAction(Intent.ACTION_PACKAGE_REMOVED);
+        intentFilter.addDataScheme("package");
+        getReactApplicationContext().registerReceiver(appStatusReceiver, intentFilter);
+    }
+
+    @ReactMethod
+    public void unregisterAppStatusListener() {
+        // 注销广播接收器
+        if (this.appStatusReceiver != null) {
+            getReactApplicationContext().unregisterReceiver(appStatusReceiver);
+            appStatusReceiver = null;
         }
     }
 }
