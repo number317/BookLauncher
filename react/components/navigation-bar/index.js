@@ -13,18 +13,18 @@ const NavigationBar = (props) => {
       <View style={styles.top}>
         <TouchableOpacity onPress={() => navigation.navigate('Book')}>
           <View style={styles.iconWrap}>
-            <Icon name="document-folder" theme={currentMenu === 'Book' ? 'fill' : 'outline'} />
+            <Icon name="document-folder" theme={currentMenu === 'Book' ? 'fill' : 'outline'} size={40} />
           </View>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.navigate('App')}>
           <View style={styles.iconWrap}>
-            <Icon name="application-one" theme={currentMenu === 'App' ? 'fill' : 'outline'} />
+            <Icon name="application-one" theme={currentMenu === 'App' ? 'fill' : 'outline'} size={40} />
           </View>
         </TouchableOpacity>
       </View>
       <View style={styles.bottom}>
         <TouchableOpacity onPress={() => navigation.navigate('Setting')}>
-          <Icon name="config" theme={currentMenu === 'Setting' ? 'fill' : 'outline'} />
+          <Icon name="config" theme={currentMenu === 'Setting' ? 'fill' : 'outline'} size={40} />
         </TouchableOpacity>
       </View>
     </View> 

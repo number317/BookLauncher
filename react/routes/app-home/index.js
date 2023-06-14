@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { observer } from 'mobx-react-lite';
 import {
   View,
   Text,
@@ -10,22 +11,23 @@ import {
 import Modal from '../../components/modal';
 import { getLocalData, setLocalData } from '../../components/global-store';
 import NavigationBar from '../../components/navigation-bar';
+import Store from '../../store';
 import styles from './style';
 
 const { PkgManager } = NativeModules;
 const AppIconView = requireNativeComponent('AppIconView');
 
-const AppHome = (props) => {
+const AppHome = () => {
+  const { rootStore } = useContext(Store);
   const {
     appLoading,
     appList,
-    setAppList,
     appPadding,
     appPageSize,
-  } = props;
+    currentAppPage,
+  } = rootStore;
 
   const [showAppInfo, setShowAppInfo] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
 
   const handleStartApp = (appInfo) => {
     PkgManager.launchApp(appInfo.packageName);
@@ -41,7 +43,8 @@ const AppHome = (props) => {
   }
 
   const handleHideApp = (appInfo) => {
-    setAppList(old => old.filter(item => item.packageName !== appInfo.packageName));
+    const old = appList.slice();
+    rootStore.setAppList(old.filter(item => item.packageName !== appInfo.packageName));
     getLocalData('hideList', (hideList = []) => {
       setLocalData('hideList', [...hideList, appInfo.packageName]);
     })
@@ -58,7 +61,7 @@ const AppHome = (props) => {
           </View>
         ) : (
           <View style={{ ...styles.appContainer, paddingHorizontal: appPadding[0], paddingVertical: appPadding[1] }}>
-            {appList.slice((currentPage- 1) * appPageSize, currentPage * appPageSize).map((appInfo) => (
+            {appList.slice((currentAppPage- 1) * appPageSize, currentAppPage * appPageSize).map((appInfo) => (
               <View style={styles.appCard} key={appInfo.packageName}>
                 <Pressable
                   onPress={() => handleStartApp(appInfo)}
@@ -84,8 +87,8 @@ const AppHome = (props) => {
           <View style={styles.pagination}>
             {
               new Array(Math.ceil(appList.length / appPageSize)).fill('0').map((_, index) => (
-                  <TouchableOpacity onPress={() => setCurrentPage(index + 1)} key={index}>
-                    <Text>{index + 1 === currentPage ? '●' : '○'}</Text>
+                  <TouchableOpacity onPress={() => rootStore.setCurrentAppPage(index + 1)} key={index}>
+                    <Text>{index + 1 === currentAppPage ? '●' : '○'}</Text>
                   </TouchableOpacity>
               ))
             }
@@ -119,4 +122,5 @@ const AppHome = (props) => {
   );
 };
 
-export default AppHome;
+export default observer(AppHome);
+

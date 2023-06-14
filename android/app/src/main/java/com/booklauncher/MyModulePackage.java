@@ -1,5 +1,6 @@
 package com.booklauncher;
 import com.booklauncher.module.AppManager;
+import com.booklauncher.module.LocalInfo;
 import com.booklauncher.ui.AppIconViewManager;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.bridge.NativeModule;
@@ -23,6 +24,7 @@ public class MyModulePackage implements ReactPackage {
         List<NativeModule> modules = new ArrayList<>();
 
         modules.add(new AppManager(reactContext));
+        modules.add(new LocalInfo(reactContext));
 
         return modules;
     }

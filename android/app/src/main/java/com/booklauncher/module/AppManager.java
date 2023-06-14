@@ -19,7 +19,7 @@ public class AppManager extends ReactContextBaseJavaModule {
     @NonNull
     @Override
     public String getName() {
-        return "PkgManager";
+        return "_AppManager";
     }
 
     public AppManager(ReactApplicationContext context) {

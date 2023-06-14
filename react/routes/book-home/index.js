@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { observer } from 'mobx-react-lite';
 import { View, Text } from 'react-native';
+import Store from '../../store';
 import NavitaionBar from '../../components/navigation-bar';
 import styles from './style';
 
 const BookHome = () => {
+  const { rootStore } = useContext(Store);
   return (
     <View style={styles.main}>
       <NavitaionBar currentMenu="Book" />
@@ -14,4 +17,4 @@ const BookHome = () => {
   );
 };
 
-export default BookHome;
+export default observer(BookHome);

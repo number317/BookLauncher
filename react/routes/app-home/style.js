@@ -1,8 +1,8 @@
 import { StyleSheet, Dimensions } from 'react-native';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
-import ConstData from '../../components/const-data';
+import GlobalConfig from '../../components/global-config';
 
-const { APP_CARD_WIDTH, APP_CARD_HEIGHT } = ConstData;
+const { APP_CARD_WIDTH, APP_CARD_HEIGHT } = GlobalConfig;
 
 const styles = StyleSheet.create({
   main: {

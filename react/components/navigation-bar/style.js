@@ -1,5 +1,7 @@
 import { StyleSheet } from 'react-native';
-import { NAVIGATION_BAR_WIDTH } from '../const-data';
+import GlobalConfig from '../global-config';
+
+const { NAVIGATION_BAR_WIDTH } = GlobalConfig;
 
 const styles = StyleSheet.create({
   bar: {
@@ -10,7 +12,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingVertical: 10, 
     borderRightWidth: 1,
-    borderRightColor: '#f0f0f0',
+    borderRightColor: '#000000',
   },
   top: {
     
