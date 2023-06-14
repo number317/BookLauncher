@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TouchableOpacity } from 'react-native';
+import { View, TouchableWithoutFeedback } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Icon from '../icon';
 import styles from './style';
@@ -11,21 +11,26 @@ const NavigationBar = (props) => {
   return (
     <View style={styles.bar}>
       <View style={styles.top}>
-        <TouchableOpacity onPress={() => navigation.navigate('Book')}>
+        <TouchableWithoutFeedback onPress={() => navigation.navigate('Book')}>
           <View style={styles.iconWrap}>
             <Icon name="document-folder" theme={currentMenu === 'Book' ? 'fill' : 'outline'} size={40} />
           </View>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('App')}>
+        </TouchableWithoutFeedback>
+        <TouchableWithoutFeedback onPress={() => navigation.navigate('App')}>
           <View style={styles.iconWrap}>
             <Icon name="application-one" theme={currentMenu === 'App' ? 'fill' : 'outline'} size={40} />
           </View>
-        </TouchableOpacity>
+        </TouchableWithoutFeedback>
       </View>
       <View style={styles.bottom}>
-        <TouchableOpacity onPress={() => navigation.navigate('Setting')}>
-          <Icon name="config" theme={currentMenu === 'Setting' ? 'fill' : 'outline'} size={40} />
-        </TouchableOpacity>
+        <TouchableWithoutFeedback onPress={() => {
+                                    console.info('info: go setting');
+                                    navigation.navigate('Setting');
+                                  }}>
+          <View>
+            <Icon name="config" theme={currentMenu === 'Setting' ? 'fill' : 'outline'} size={40} />
+          </View>
+        </TouchableWithoutFeedback>
       </View>
     </View> 
   )

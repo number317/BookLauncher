@@ -14,7 +14,7 @@ import NavigationBar from '../../components/navigation-bar';
 import Store from '../../store';
 import styles from './style';
 
-const { PkgManager } = NativeModules;
+const { _AppManager } = NativeModules;
 const AppIconView = requireNativeComponent('AppIconView');
 
 const AppHome = () => {
@@ -30,7 +30,7 @@ const AppHome = () => {
   const [showAppInfo, setShowAppInfo] = useState(false);
 
   const handleStartApp = (appInfo) => {
-    PkgManager.launchApp(appInfo.packageName);
+    _AppManager.launchApp(appInfo.packageName);
   };
 
   const handleShowAppInfo = (appInfo) => {
@@ -39,7 +39,7 @@ const AppHome = () => {
 
   const handleUninstallApp = (appInfo) => {
     setShowAppInfo(false);
-    PkgManager.uninstallApp(appInfo.packageName);
+    _AppManager.uninstallApp(appInfo.packageName);
   }
 
   const handleHideApp = (appInfo) => {
