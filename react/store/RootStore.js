@@ -1,6 +1,7 @@
 import { NativeModules } from 'react-native';
 import { useLocalObservable } from "mobx-react-lite"
 import { getLocalData } from '../components/global-store';
+import I18nMap from '../locale';
 
 const { _LocalInfo } = NativeModules;
 
@@ -42,15 +43,20 @@ const RootStore = () => useLocalObservable(() => ({
 
   lang: '',
   setLang(data) {
-    this.lang = data;
+    this.lang= data;
   },
   queryLocalLang() {
     _LocalInfo.getLocalLanguage((currentLang) => {
-      console.info('info: lang', currentLang);
-      this.lang = currentLang;
+      this.lang= currentLang;
     });
   },
-
+  formatMessage(key) {
+    if (I18nMap[this.lang]) {
+      return I18nMap[this.lang][key] || key;
+    } else {
+      return I18nMap.en[key] || key;
+    }
+  },
 }));
 
 export default RootStore;

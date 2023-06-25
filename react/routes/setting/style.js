@@ -9,7 +9,7 @@ const styles = StyleSheet.create({
   },
   setting: {
     flex: 1,
-  }
+  },
 });
 
 export default styles;

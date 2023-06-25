@@ -14,12 +14,13 @@ import NavigationBar from '../../components/navigation-bar';
 import Store from '../../store';
 import styles from './style';
 
-const { PkgManager } = NativeModules;
+const { _AppManager } = NativeModules;
 const AppIconView = requireNativeComponent('AppIconView');
 
 const AppHome = () => {
   const { rootStore } = useContext(Store);
   const {
+    formatMessage,
     appLoading,
     appList,
     appPadding,
@@ -30,7 +31,7 @@ const AppHome = () => {
   const [showAppInfo, setShowAppInfo] = useState(false);
 
   const handleStartApp = (appInfo) => {
-    PkgManager.launchApp(appInfo.packageName);
+    _AppManager.launchApp(appInfo.packageName);
   };
 
   const handleShowAppInfo = (appInfo) => {
@@ -39,7 +40,7 @@ const AppHome = () => {
 
   const handleUninstallApp = (appInfo) => {
     setShowAppInfo(false);
-    PkgManager.uninstallApp(appInfo.packageName);
+    _AppManager.uninstallApp(appInfo.packageName);
   }
 
   const handleHideApp = (appInfo) => {
@@ -106,13 +107,13 @@ const AppHome = () => {
               <Text>{showAppInfo.appName}</Text>
               <Text>{showAppInfo.packageName}</Text>
               <TouchableOpacity onPress={() => handleUninstallApp(showAppInfo)}>
-                <Text>卸载</Text>
+                <Text>{formatMessage('uninstall')}</Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={() => handleHideApp(showAppInfo)}>
-                <Text>隐藏</Text>
+                <Text>{formatMessage('hide')}</Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={() => setShowAppInfo(false)}>
-                <Text>关闭</Text>
+                <Text>{formatMessage('close')}</Text>
               </TouchableOpacity>
             </View>
           </Modal>

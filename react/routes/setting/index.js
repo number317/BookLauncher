@@ -8,12 +8,11 @@ import styles from './style';
 
 const Setting = () => {
   const { rootStore } = useContext(Store);
+  const { hideList, formatMessage } = rootStore;
   return (
     <View style={styles.main}>
       <NavigationBar currentMenu="Setting" />
       <View style={styles.setting}>
-        <Text>Setting</Text>
-        <Gray16 />
       </View>
     </View>
   );
