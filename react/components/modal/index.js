@@ -1,14 +1,28 @@
 import React from 'react';
-import { View } from 'react-native';
+import { View, TouchableOpacity } from 'react-native';
+import Icon from '../icon';
 import styles from './style';
 
 const Modal = (props) => {
-  const { children } = props;
+  const { showHeader = true, handleClose, style, children } = props;
 
   return (
-      <View style={styles.container}>
-        { children }
+    <View style={styles.container}>
+      <View style={styles.modal}>
+        {
+          showHeader && (
+            <View style={styles.modalHeader}>
+              <TouchableOpacity onPress={handleClose}>
+                <Icon name="close" size={16} />
+              </TouchableOpacity>
+            </View>
+          )
+        }
+        <View style={{ ...styles.modalBody, ...style }}>
+          { children }
+        </View>
       </View>
+    </View>
   );
 };
 

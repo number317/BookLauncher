@@ -53,11 +53,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   modal: {
-    height: 200,
-    width: 300,
-    backgroundColor: Colors.white,
-    borderWidth: 1,
-    borderRadius: 5,
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },

@@ -1,5 +1,17 @@
-export default {
+const appHome = {
   uninstall: 'uninstall',
   hide: 'hide',
-  close: 'close',
+};
+
+const setting = {
+  setting: 'setting',
+  'setting.hide.app': 'Hidden Apps',
+  'setting.gray.test': 'Gray Test',
+  'setting.app.info': 'App Info',
+  'setting.language.setting': 'Language Setting',
+};
+
+export default {
+  ...appHome,
+  ...setting,
 };

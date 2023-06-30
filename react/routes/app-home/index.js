@@ -94,11 +94,11 @@ const AppHome = () => {
               ))
             }
           </View>
-        ) 
+        )
       }
       {
         showAppInfo && (
-          <Modal>
+          <Modal handleClose={() => setShowAppInfo(false)}>
             <View style={styles.modal}>
               <AppIconView
                 style={styles.appIcon}
@@ -112,9 +112,6 @@ const AppHome = () => {
               <TouchableOpacity onPress={() => handleHideApp(showAppInfo)}>
                 <Text>{formatMessage('hide')}</Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => setShowAppInfo(false)}>
-                <Text>{formatMessage('close')}</Text>
-              </TouchableOpacity>
             </View>
           </Modal>
         )
@@ -124,4 +121,3 @@ const AppHome = () => {
 };
 
 export default observer(AppHome);
-
