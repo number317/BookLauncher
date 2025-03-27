@@ -36,6 +36,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     alignItems: 'center',
     justifyContent: 'flex-start',
+    backgroundColor: Colors.green,
   },
   appIcon: {
     width: 50,

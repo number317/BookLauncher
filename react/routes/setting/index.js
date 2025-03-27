@@ -39,6 +39,10 @@ const Setting = () => {
       <View style={styles.setting}>
         <Text style={styles.title}>{formatMessage('setting')}</Text>
         <View style={styles.form}>
+          <View style={styles.formItem}>
+            <Text>{formatMessage('setting.appmode.setting')}</Text>
+            <Icon name="right" size={40} />
+          </View>
           <TouchableOpacity onPress={handleSelectLanguage}>
             <View style={styles.formItem}>
               <Text>{formatMessage('setting.language.setting')}</Text>
@@ -67,7 +71,7 @@ const Setting = () => {
       </View>
       {
         showModal === 'language' && (
-          <Modal handleClose={handleCloseModal}>
+          <Modal handleClose={handleCloseModal} displayType="bottom">
             <View>
               <View>
                 <Text>English</Text>
@@ -79,14 +83,14 @@ const Setting = () => {
       }
       {
         showModal === 'hiddenApp' && (
-          <Modal handleClose={handleCloseModal}>
+          <Modal handleClose={handleCloseModal} displayType="fullscreen">
             <Text>hiddenApp</Text>
           </Modal>
         )
       }
       {
         showModal === 'grayTest' && (
-          <Modal handleClose={handleCloseModal}>
+          <Modal handleClose={handleCloseModal} displayType="fullscreen">
             <View style={styles.grayTest}>
               <Gray16 />
             </View>
@@ -95,7 +99,7 @@ const Setting = () => {
       }
       {
         showModal === 'appInfo' && (
-          <Modal handleClose={handleCloseModal}>
+          <Modal handleClose={handleCloseModal} displayType="center" showFooter>
             <Text>appInfo</Text>
           </Modal>
         )

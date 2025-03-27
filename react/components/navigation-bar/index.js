@@ -1,14 +1,16 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { View, TouchableWithoutFeedback } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import Store from '../../store';
 import Icon from '../icon';
 import styles from './style';
 
 const NavigationBar = (props) => {
   const { currentMenu } = props;
+  const { rootStore } = useContext(Store);
   const navigation = useNavigation();
 
-  return (
+  return rootStore.appMode === 'Book' && (
     <View style={styles.bar}>
       <View style={styles.top}>
         <TouchableWithoutFeedback onPress={() => navigation.navigate('Book')}>

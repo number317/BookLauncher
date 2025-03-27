@@ -6,16 +6,15 @@ import {
   NativeModules,
   TouchableOpacity,
   Pressable,
-  requireNativeComponent,
 } from 'react-native';
 import Modal from '../../components/modal';
 import { getLocalData, setLocalData } from '../../components/global-store';
 import NavigationBar from '../../components/navigation-bar';
+import { AppIconView } from '../../components/native-components';
 import Store from '../../store';
 import styles from './style';
 
 const { _AppManager } = NativeModules;
-const AppIconView = requireNativeComponent('AppIconView');
 
 const AppHome = () => {
   const { rootStore } = useContext(Store);
@@ -35,6 +34,7 @@ const AppHome = () => {
   };
 
   const handleShowAppInfo = (appInfo) => {
+    console.info('info: trigger long press');
     setShowAppInfo(appInfo);
   };
 

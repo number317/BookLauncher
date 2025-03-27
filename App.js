@@ -1,4 +1,5 @@
 import React from 'react';
+import { StatusBar } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { StoreProvider } from './react/store';
@@ -11,6 +12,7 @@ const Stack = createNativeStackNavigator();
 const App = () => (
   <StoreProvider>
     <NavigationContainer>
+      <StatusBar hidden={true} />
       <Stack.Navigator
         initialRouteName="Book"
         screenOptions={{ animation: 'none', headerShown: false }}

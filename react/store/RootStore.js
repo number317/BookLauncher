@@ -6,6 +6,10 @@ import I18nMap from '../locale';
 const { _LocalInfo } = NativeModules;
 
 const RootStore = () => useLocalObservable(() => ({
+  appMode: 'Book',
+  setAppMode(data) {
+    this.appMode = data;
+  },
   appList: [],
   setAppList(data) {
     this.appList = data;
