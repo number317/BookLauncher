@@ -5,11 +5,12 @@ const getLocalData = async (key, callback = () => undefined) => {
   try {
     const dataStr = await AsyncStorage.getItem(key);
     if (dataStr) {
-      console.info('info: dataStr', dataStr);
       const data = JSON.parse(dataStr);
       callback(data);
+      return data;
     } else {
       callback();
+      return '';
     }
   } catch (error) {
     ToastAndroid.show(error)

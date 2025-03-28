@@ -1,4 +1,5 @@
 import React, { useContext } from 'react';
+import { observer } from 'mobx-react-lite';
 import { View, TouchableWithoutFeedback } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Store from '../../store';
@@ -10,7 +11,7 @@ const NavigationBar = (props) => {
   const { rootStore } = useContext(Store);
   const navigation = useNavigation();
 
-  return rootStore.appMode === 'Book' && (
+  return rootStore.appMode === 'book' && (
     <View style={styles.bar}>
       <View style={styles.top}>
         <TouchableWithoutFeedback onPress={() => navigation.navigate('Book')}>
@@ -35,4 +36,4 @@ const NavigationBar = (props) => {
   )
 };
 
-export default NavigationBar;
+export default observer(NavigationBar);

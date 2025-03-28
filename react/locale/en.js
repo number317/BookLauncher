@@ -1,24 +1,30 @@
 const common = {
   confirm: 'Confirm',
   cancel: 'Cancel',
-};
-
-const appHome = {
+  init: 'init...',
   uninstall: 'uninstall',
   hide: 'hide',
+  show: 'show',
+  setting: 'setting',
+};
+
+const app = {
+  'app.list.reading': 'reading app list...',
 };
 
 const setting = {
-  setting: 'setting',
   'setting.appmode.setting': 'app mode',
-  'setting.hide.app': 'Hidden Apps',
+  'setting.appmode.book': 'shelf',
+  'setting.appmode.simple': 'simple',
+  'setting.app.view': 'Apps View',
   'setting.gray.test': 'Gray Test',
   'setting.app.info': 'App Info',
   'setting.language.setting': 'Language Setting',
+  'setting.app.reset': 'Reset App',
 };
 
 export default {
   ...common,
-  ...appHome,
+  ...app,
   ...setting,
 };

@@ -9,24 +9,35 @@ import styles from './style';
 const ICON_MAP = {
   outline: {
     'application-one': require('./outline/application-one.png'),
-    'document-folder': require('./outline/document-folder.png'),
-    config: require('./outline/config.png'),
-    right: require('./outline/right.png'),
+    'arrow-down': require('./outline/arrow-down.png'),
+    'arrow-up': require('./outline/arrow-up.png'),
+    'check-one': require('./outline/check-one.png'),
     close: require('./outline/close.png'),
+    config: require('./outline/config.png'),
+    'document-folder': require('./outline/document-folder.png'),
+    left: require('./outline/left.png'),
+    right: require('./outline/right.png'),
+    round: require('./outline/round.png'),
   },
   fill: {
     'application-one': require('./fill/application-one.png'),
-    'document-folder': require('./fill/document-folder.png'),
+    'arrow-down': require('./outline/arrow-down.png'),
+    'arrow-up': require('./outline/arrow-up.png'),
+    'check-one': require('./fill/check-one.png'),
+    close: require('./outline/close.png'),
     config: require('./fill/config.png'),
+    'document-folder': require('./fill/document-folder.png'),
+    left: require('./outline/left.png'),
     right: require('./outline/right.png'),
+    round: require('./fill/round.png'),
   },
 };
 
 const Icon = (props) => {
-  const { theme = 'outline', name, size = 24 } = props;
+  const { theme = 'outline', name, size = 24, style } = props;
   return (
     <Image
-      style={{...styles.image, width: size, height: size}}
+      style={{...styles.image, width: size, height: size, ...style }}
       source={ICON_MAP[theme][name]}
     />
   )

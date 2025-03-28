@@ -45,6 +45,18 @@ const styles = StyleSheet.create({
   appName: {
     fontSize: 10,
   },
+  appList: {
+    flex: 1,
+  },
+  appItem: {
+    height: 40,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  appItemName: {
+    fontSize: 22,
+  },
   centerView: {
     flex: 1,
     position: 'absolute',

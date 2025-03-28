@@ -11,6 +11,11 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
   },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+  },
   title: {
     fontSize: 20,
     fontWeight: 'bold',
@@ -34,6 +39,11 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderBottomWidth: 1,
     borderColor: '#a0a0a0',
+  },
+  action: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
   grayTest: {
     flex: 1,
