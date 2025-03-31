@@ -5,17 +5,22 @@ import GlobalConfig from '../../components/global-config';
 const { APP_CARD_WIDTH, APP_CARD_HEIGHT } = GlobalConfig;
 
 const styles = StyleSheet.create({
-  bookContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    position: 'relative',
-    backgroundColor: Colors.white,
-  },
-  simpleContainer: {
+  wrap: {
     flex: 1,
     flexDirection: 'column',
-    position: 'relative',
-    backgroundColor: Colors.white,
+    backgroundColor: '#ffffff',
+  },
+  main: {
+    flex: 1,
+    flexDirection: 'row',
+    backgroundColor: '#ffffff',
+    borderTopWidth: 1,
+    borderTopColor: '#000',
+  },
+  simple: {
+    flex: 1,
+    flexDirection: 'column',
+    backgroundColor: '#ffffff',
   },
   loading: {
     flex: 1,
@@ -75,6 +80,14 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  action: {
+    width: 400,
+    height: 80,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 100,
   },
   pagination: {
     position: 'absolute',

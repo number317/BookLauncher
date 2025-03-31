@@ -3,8 +3,9 @@ import { NativeEventEmitter, NativeModules } from 'react-native';
 import RootStore from './RootStore';
 import {setLocalData} from '../components/global-store';
 
-const { _AppManager } = NativeModules;
+const { _AppManager, _BatteryStatus } = NativeModules;
 const appEventEmitter = new NativeEventEmitter(_AppManager);
+const batteryEventEmitter = new NativeEventEmitter(_BatteryStatus);
 
 const Store = createContext();
 
@@ -39,9 +40,16 @@ const StoreProvider = (props) => {
     setLocalData('appList', rootStore.appList.slice());
   };
 
+  const handleBatteryChange = (event) => {
+    const { batteryLevel, isCharging } = event;
+    rootStore.setBatteryLevel(batteryLevel);
+    rootStore.setIsCharging(isCharging);
+  };
+
   useEffect(() => {
     const init = async () => {
       rootStore.setAppLoading(true);
+      rootStore.queryBookList();
       const [hello, appMode, lang] = await rootStore.queryCacheConfig();
       rootStore.setHello(hello || 'Hello world!');
       rootStore.setAppMode(appMode || 'book');
@@ -50,6 +58,11 @@ const StoreProvider = (props) => {
       } else {
         await rootStore.queryLocalLang();
       }
+
+      const batteryInfo = await _BatteryStatus.getBatteryStatus();
+      rootStore.setBatteryLevel(batteryInfo.batteryLevel);
+      rootStore.setIsCharging(batteryInfo.isCharging);
+
       rootStore.setAppLoading(false);
     };
 
@@ -57,10 +70,16 @@ const StoreProvider = (props) => {
     _AppManager.registerAppStatusListener();
     const appStatusListener = appEventEmitter.addListener('AppStatusEvent', handleAppChange);
 
+    _BatteryStatus.startBatteryStatusListener();
+    batteryEventEmitter.addListener('BatteryStatusChanged', handleBatteryChange);
+
     rootStore.queryAppList();
     return () => {
       _AppManager.unregisterAppStatusListener();
       appStatusListener.remove();
+
+      batteryEventEmitter.removeListener('BatteryStatusChanged', handleBatteryChange);
+      _BatteryStatus.stopBatteryStatusListener();
     }
   }, []);
 

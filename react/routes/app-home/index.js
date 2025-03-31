@@ -100,50 +100,54 @@ const AppHome = () => {
   };
 
   return (
-    <View style={rootStore.appMode === 'book' ? styles.bookContainer : styles.simpleContainer}>
-      <NavigationBar currentMenu="App" />
-      {rootStore.appMode === 'simple' && <TopStatus />}
-      {rootStore.appMode === 'simple' && <Time />}
-      {
-        appLoading ? (
-          <View style={styles.loading}>
-            <Text>{rootStore.formatMessage('app.list.reading')}</Text>
-          </View>
-        ) : renderAppList()
-      }
-      {
-        rootStore.appMode === 'book' && Math.ceil(appList.length / appPageSize) > 1 && !appLoading && (
-          <View style={styles.pagination}>
-            {
-              new Array(Math.ceil(appList.length / appPageSize)).fill('0').map((_, index) => (
+    <View style={styles.wrap}>
+      <TopStatus />
+      <View style={rootStore.appMode === 'book' ? styles.main : styles.simple}>
+        <NavigationBar currentMenu="App" />
+        {rootStore.appMode === 'simple' && <Time />}
+        {
+          appLoading ? (
+            <View style={styles.loading}>
+              <Text>{rootStore.formatMessage('app.list.reading')}</Text>
+            </View>
+          ) : renderAppList()
+        }
+        {
+          rootStore.appMode === 'book' && Math.ceil(appList.length / appPageSize) > 1 && !appLoading && (
+            <View style={styles.pagination}>
+              {
+                new Array(Math.ceil(appList.length / appPageSize)).fill('0').map((_, index) => (
                   <TouchableOpacity onPress={() => rootStore.setCurrentAppPage(index + 1)} key={index}>
                     <Text>{index + 1 === currentAppPage ? '●' : '○'}</Text>
                   </TouchableOpacity>
-              ))
-            }
-          </View>
-        )
-      }
-      {
-        showAppInfo && (
-          <Modal handleClose={() => setShowAppInfo(false)}>
-            <View style={styles.modal}>
-              <AppIconView
-                style={styles.appIcon}
-                packageName={showAppInfo.packageName}
-              />
-              <Text>{showAppInfo.appName}</Text>
-              <Text>{showAppInfo.packageName}</Text>
-              <TouchableOpacity onPress={() => handleUninstallApp(showAppInfo)}>
-                <Text>{formatMessage('uninstall')}</Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => handleHideApp(showAppInfo)}>
-                <Text>{formatMessage('hide')}</Text>
-              </TouchableOpacity>
+                ))
+              }
             </View>
-          </Modal>
-        )
-      }
+          )
+        }
+        {
+          showAppInfo && (
+            <Modal handleClose={() => setShowAppInfo(false)}>
+              <View style={styles.modal}>
+                <AppIconView
+                  style={styles.appIcon}
+                  packageName={showAppInfo.packageName}
+                />
+                <Text>{showAppInfo.appName}</Text>
+                <Text>{showAppInfo.packageName}</Text>
+                <View style={styles.action}>
+                  <TouchableOpacity onPress={() => handleUninstallApp(showAppInfo)}>
+                    <Text>{formatMessage('uninstall')}</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={() => handleHideApp(showAppInfo)}>
+                    <Text>{formatMessage('hide')}</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </Modal>
+          )
+        }
+      </View>
     </View>
   )
 };

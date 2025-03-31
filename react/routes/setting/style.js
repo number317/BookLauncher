@@ -1,11 +1,18 @@
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
+  wrap: {
+    flex: 1,
+    flexDirection: 'column',
+    backgroundColor: '#ffffff',
+  },
   main: {
     flex: 1,
     flexDirection: 'row',
     position: 'relative',
     backgroundColor: '#ffffff',
+    borderTopWidth: 1,
+    borderTopColor: '#000',
   },
   setting: {
     flex: 1,

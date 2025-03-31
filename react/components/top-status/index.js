@@ -1,39 +1,12 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext } from 'react';
 import { observer } from 'mobx-react-lite';
-import { View, Text, NativeModules, NativeEventEmitter } from 'react-native';
+import { View, Text } from 'react-native';
 import Icon from '../icon';
 import Store from '../../store';
 import styles from './styles';
 
-const { _BatteryStatus } = NativeModules;
-const batteryEventEmitter = new NativeEventEmitter(_BatteryStatus);
-
 const TopStatus = () => {
-  const { rootStore } = useContext(Store);
-  const [batteryLevel, setBatteryLevel] = useState(0);
-  const [isCharging, setIsCharging] = useState(false);
-
-  const handleBatteryChange = (event) => {
-    const { batteryLevel, isCharging } = event;
-    setBatteryLevel(batteryLevel);
-    setIsCharging(isCharging);
-  };
-
-  useEffect(() => {
-    const init = async () => {
-      const batteryInfo = await _BatteryStatus.getBatteryStatus();
-      setBatteryLevel(batteryInfo.batteryLevel);
-      setIsCharging(batteryInfo.isCharging);
-    };
-    init();
-
-    _BatteryStatus.startBatteryStatusListener();
-    batteryEventEmitter.addListener('BatteryStatusChanged', handleBatteryChange);
-    return () => {
-      batteryEventEmitter.removeListener('BatteryStatusChanged', handleBatteryChange);
-      _BatteryStatus.stopBatteryStatusListener();
-    }
-  }, []);
+  const { rootStore, rootStore: { batteryLevel, isCharging } } = useContext(Store);
 
   return (
     <View style={styles.container}>

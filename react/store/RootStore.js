@@ -4,7 +4,7 @@ import { getLocalData } from '../components/global-store';
 import GlobalConfig from '../components/global-config';
 import I18nMap from '../locale';
 
-const { _LocalInfo, _AppManager } = NativeModules;
+const { _LocalInfo, _AppManager, _BookManager } = NativeModules;
 
 const { NAVIGATION_BAR_WIDTH, APP_CARD_WIDTH, APP_CARD_HEIGHT } = GlobalConfig;
 
@@ -16,6 +16,33 @@ const RootStore = () => useLocalObservable(() => ({
   appMode: '',
   setAppMode(data) {
     this.appMode = data;
+  },
+  batteryLevel: 0,
+  setBatteryLevel(data) {
+    this.batteryLevel = data;
+  },
+  isCharging: false,
+  setIsCharging(data) {
+    this.isCharging = data;
+  },
+  bookLoading: true,
+  setBookLoading(data) {
+    this.bookLoading = data;
+  },
+  bookList: [],
+  setBookList(data) {
+    this.bookList = data;
+  },
+  async queryBookList() {
+    this,this.setBookLoading(true);
+    try {
+      const booksStr = await _BookManager.getBookList();
+      this.bookList = JSON.parse(booksStr);
+    } catch (error) {
+      console.error('error: ', error);
+      this.bookList = [];
+    }
+    this.setBookLoading(false);
   },
   appList: [],
   setAppList(data) {
