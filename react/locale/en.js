@@ -21,6 +21,7 @@ const setting = {
   'setting.app.info': 'App Info',
   'setting.language.setting': 'Language Setting',
   'setting.app.reset': 'Reset App',
+  'setting.hello.text': 'Hello',
 };
 
 export default {

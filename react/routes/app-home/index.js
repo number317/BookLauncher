@@ -9,7 +9,8 @@ import {
   Pressable,
   ScrollView,
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import TopStatus from '../../components/top-status';
+import Time from '../../components/time';
 import Modal from '../../components/modal';
 import { setLocalData } from '../../components/global-store';
 import NavigationBar from '../../components/navigation-bar';
@@ -29,7 +30,6 @@ const AppHome = () => {
     appPageSize,
     currentAppPage,
   } = rootStore;
-  const navigation = useNavigation();
 
   const [showAppInfo, setShowAppInfo] = useState(false);
 
@@ -94,21 +94,16 @@ const AppHome = () => {
               </Pressable>
             </View>
           ))}
-          <View style={styles.appItem}>
-            <Pressable onPress={() => navigation.navigate('Setting')}>
-              <Text style={styles.appItemName} numberOfLines={1} ellipsizeMode="tail">
-                Options
-              </Text>
-            </Pressable>
-          </View>
         </ScrollView>
       );
     }
   };
 
   return (
-    <View style={styles.main}>
+    <View style={rootStore.appMode === 'book' ? styles.bookContainer : styles.simpleContainer}>
       <NavigationBar currentMenu="App" />
+      {rootStore.appMode === 'simple' && <TopStatus />}
+      {rootStore.appMode === 'simple' && <Time />}
       {
         appLoading ? (
           <View style={styles.loading}>

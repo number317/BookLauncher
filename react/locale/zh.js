@@ -21,6 +21,7 @@ const setting = {
   'setting.app.info': '应用信息',
   'setting.language.setting': '语言设置',
   'setting.app.reset': '重置应用',
+  'setting.hello.text': '问候语',
 };
 
 export default {

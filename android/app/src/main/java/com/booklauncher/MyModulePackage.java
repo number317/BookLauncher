@@ -1,5 +1,6 @@
 package com.booklauncher;
 import com.booklauncher.module.AppManager;
+import com.booklauncher.module.BatteryStatus;
 import com.booklauncher.module.LocalInfo;
 import com.booklauncher.ui.AppIconViewManager;
 import com.facebook.react.ReactPackage;
@@ -25,6 +26,7 @@ public class MyModulePackage implements ReactPackage {
 
         modules.add(new AppManager(reactContext));
         modules.add(new LocalInfo(reactContext));
+        modules.add(new BatteryStatus(reactContext));
 
         return modules;
     }

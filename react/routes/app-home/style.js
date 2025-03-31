@@ -5,9 +5,15 @@ import GlobalConfig from '../../components/global-config';
 const { APP_CARD_WIDTH, APP_CARD_HEIGHT } = GlobalConfig;
 
 const styles = StyleSheet.create({
-  main: {
+  bookContainer: {
     flex: 1,
     flexDirection: 'row',
+    position: 'relative',
+    backgroundColor: Colors.white,
+  },
+  simpleContainer: {
+    flex: 1,
+    flexDirection: 'column',
     position: 'relative',
     backgroundColor: Colors.white,
   },

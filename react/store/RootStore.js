@@ -9,14 +9,13 @@ const { _LocalInfo, _AppManager } = NativeModules;
 const { NAVIGATION_BAR_WIDTH, APP_CARD_WIDTH, APP_CARD_HEIGHT } = GlobalConfig;
 
 const RootStore = () => useLocalObservable(() => ({
+  hello: 'Hello world!',
+  setHello(data) {
+    this.hello = data;
+  },
   appMode: '',
   setAppMode(data) {
     this.appMode = data;
-  },
-  loadAppMode() {
-    getLocalData('appMode', (data) => {
-      this.setAppMode(data);      
-    });
   },
   appList: [],
   setAppList(data) {
@@ -81,6 +80,13 @@ const RootStore = () => useLocalObservable(() => ({
     } else {
       return I18nMap.en[key] || key;
     }
+  },
+  queryCacheConfig() {
+    return Promise.all([
+      getLocalData('hello'),
+      getLocalData('appMode'),
+      getLocalData('lang'),
+    ]);
   },
 }));
 

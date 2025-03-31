@@ -42,8 +42,15 @@ const StoreProvider = (props) => {
   useEffect(() => {
     const init = async () => {
       rootStore.setAppLoading(true);
-      await rootStore.queryLocalLang();
-      rootStore.loadAppMode();
+      const [hello, appMode, lang] = await rootStore.queryCacheConfig();
+      rootStore.setHello(hello || 'Hello world!');
+      rootStore.setAppMode(appMode || 'book');
+      if (lang) {
+        rootStore.setLang(lang);
+      } else {
+        await rootStore.queryLocalLang();
+      }
+      rootStore.setAppLoading(false);
     };
 
     init();

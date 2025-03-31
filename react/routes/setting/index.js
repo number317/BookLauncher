@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { observer } from 'mobx-react-lite';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import NavigationBar from '../../components/navigation-bar';
 import Modal from '../../components/modal';
@@ -16,6 +16,7 @@ const Setting = () => {
   const { rootStore } = useContext(Store);
   const navigation = useNavigation();
   const { formatMessage } = rootStore;
+  const [editHello, setEditHello] = useState(false);
   const [showModal, setShowModal] = useState(false); 
 
   const handleCloseModal = (modalName) => {
@@ -50,6 +51,30 @@ const Setting = () => {
           <Text style={styles.title}>{formatMessage('setting')}</Text>
         </View>
         <View style={styles.form}>
+          <TouchableOpacity onPress={() => setShowModal('hello')}>
+            <View style={styles.formItem}>
+              <Text>{formatMessage('setting.hello.text')}</Text>
+                {
+                  editHello ? (
+                    <TextInput
+                      autoFocus
+                      value={rootStore.hello}
+                      maxLength={20}
+                      placeholder={rootStore.formatMessage('setting.hello.text')}
+                      onChangeText={(text) => rootStore.setHello(text)}
+                      onBlur={() => {
+                        setEditHello(false);
+                        setLocalData('hello', rootStore.hello);
+                      }}
+                    />
+                  ) : (
+                    <TouchableOpacity onPress={() => setEditHello(true)}>
+                      <Text>{rootStore.hello}</Text>
+                    </TouchableOpacity>
+                  )
+                }
+            </View>
+          </TouchableOpacity>
           <View style={styles.formItem}>
             <Text>{formatMessage('setting.appmode.setting')}</Text>
             <View style={styles.action}>
@@ -103,6 +128,18 @@ const Setting = () => {
           </TouchableOpacity>
         </View>
       </View>
+      {
+        showModal === 'hello' && (
+          <Modal handleClose={handleCloseModal} displayType="center">
+            <TextInput
+              autoFocus
+              value={rootStore.hello}
+              placeholder={rootStore.formatMessage('setting.hello.text')}
+              onChangeText={(text) => rootStore.setHello(text)}
+            />
+          </Modal>
+        )
+      }
       {
         showModal === 'language' && (
           <Modal handleClose={handleCloseModal} displayType="bottom">
