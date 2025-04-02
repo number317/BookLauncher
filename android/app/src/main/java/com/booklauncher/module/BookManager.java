@@ -2,10 +2,13 @@ package com.booklauncher.module;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.os.FileObserver;
 import android.util.Log;
+import android.widget.Toast;
 import androidx.annotation.NonNull;
+import androidx.core.content.FileProvider;
 import com.facebook.react.bridge.*;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 import org.json.JSONArray;
@@ -155,8 +158,20 @@ public class BookManager extends ReactContextBaseJavaModule {
     public void openBook(String filePath, Promise promise) {
         try {
             Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setDataAndType(Uri.parse("file://" + filePath), "application/pdf");
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                Uri uri = getContentUri(filePath);
+                Log.d("BookManager", "openBook uri " + uri);
+                if (uri != null) {
+                    intent.setDataAndType(uri, filePath.endsWith(".pdf") ? "application/pdf" : "application/epub+zip");
+                } else {
+                    Toast.makeText(reactContext, "File not found", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+            } else {
+                intent.setDataAndType(Uri.parse("file://" + filePath), filePath.endsWith(".pdf") ? "application/pdf" : "application/epub+zip");
+            }
             intent.setPackage("org.koreader.launcher");
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             reactContext.startActivity(intent);
@@ -165,5 +180,17 @@ public class BookManager extends ReactContextBaseJavaModule {
             e.printStackTrace();
             promise.reject(e);
         }
+    }
+
+    private Uri getContentUri (String filePath) {
+        try {
+            Uri contentUri = FileProvider.getUriForFile(reactContext,
+                    reactContext.getPackageName() + ".fileProvider",
+                    new File(filePath));
+            return contentUri;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

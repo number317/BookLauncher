@@ -1,7 +1,7 @@
 import React, { createContext, useEffect } from 'react';
 import { NativeEventEmitter, NativeModules } from 'react-native';
 import RootStore from './RootStore';
-import {setLocalData} from '../components/global-store';
+import { setLocalData } from '../components/global-store';
 
 const { _AppManager, _BatteryStatus } = NativeModules;
 const appEventEmitter = new NativeEventEmitter(_AppManager);

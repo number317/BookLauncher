@@ -1,4 +1,4 @@
-import { NativeModules, Dimensions } from 'react-native';
+import { NativeModules } from 'react-native';
 import { useLocalObservable } from "mobx-react-lite"
 import { getLocalData, setLocalData } from '../components/global-store';
 import GlobalConfig from '../components/global-config';
@@ -6,7 +6,15 @@ import I18nMap from '../locale';
 
 const { _LocalInfo, _AppManager, _BookManager } = NativeModules;
 
-const { NAVIGATION_BAR_WIDTH, APP_CARD_WIDTH, APP_CARD_HEIGHT } = GlobalConfig;
+const {
+  DEVICE_WIDTH,
+  DEVICE_HEIGHT,
+  NAVIGATION_BAR_WIDTH,
+  LIST_CONTAINER_WIDTH,
+  LIST_CONTAINER_HEIGHT,
+  APP_CARD_WIDTH,
+  APP_CARD_HEIGHT,
+} = GlobalConfig;
 
 const RootStore = () => useLocalObservable(() => ({
   hello: 'Hello world!',
@@ -33,8 +41,27 @@ const RootStore = () => useLocalObservable(() => ({
   setBookList(data) {
     this.bookList = data;
   },
+  bookWidth: 0,
+  setBooksWidth(data) {
+    this.bookWidth = data;
+  },
   async queryBookList() {
     this,this.setBookLoading(true);
+    console.info('info: DEVICE_WIDTH', DEVICE_WIDTH);
+    console.info('info: DEVICE_HEIGHT', DEVICE_HEIGHT);
+    let booksEachLine;
+    if (DEVICE_WIDTH <= 600) {
+      booksEachLine = 3;
+    } else if (DEVICE_WIDTH <= 800) {
+      booksEachLine = 4;
+    } else {
+      booksEachLine = 6;
+    }
+
+    const booksWidth = Math.floor((LIST_CONTAINER_WIDTH - 3*2 - 3*booksEachLine*2) / booksEachLine);
+    console.info('info: booksWidth', booksWidth);
+    this.setBooksWidth(booksWidth);
+
     try {
       const booksStr = await _BookManager.getBookList();
       this.setBookList(JSON.parse(booksStr));
@@ -50,17 +77,17 @@ const RootStore = () => useLocalObservable(() => ({
   },
   queryAppList() {
     _AppManager.getAppList(async (result) => {
+      console.info('info: get app list', result);
       const cacheAppList = await getLocalData('appList') || [];
       const notCacheList = result.filter(x => !cacheAppList.some(y => y.packageName === x.packageName));
       cacheAppList.push(...notCacheList);
       this.setAppList(cacheAppList);
 
-      const { width, height } = Dimensions.get('window');
-      const appCountPerLine = Math.floor((width - NAVIGATION_BAR_WIDTH) / APP_CARD_WIDTH);
-      const appPaddingHorizontal = (width - appCountPerLine * APP_CARD_WIDTH - NAVIGATION_BAR_WIDTH) / 2;
+      const appCountPerLine = Math.floor(LIST_CONTAINER_WIDTH / APP_CARD_WIDTH);
+      const appPaddingHorizontal = (DEVICE_WIDTH - appCountPerLine * APP_CARD_WIDTH - NAVIGATION_BAR_WIDTH) / 2;
 
-      const appCountPerColumn = Math.floor(height / APP_CARD_HEIGHT);
-      const appPaddingVertical = (height - appCountPerColumn * APP_CARD_HEIGHT) / 2;
+      const appCountPerColumn = Math.floor(LIST_CONTAINER_HEIGHT / APP_CARD_HEIGHT);
+      const appPaddingVertical = (DEVICE_HEIGHT - appCountPerColumn * APP_CARD_HEIGHT) / 2;
 
       const pageSizeApp = appCountPerLine * appCountPerColumn;
 

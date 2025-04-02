@@ -38,7 +38,7 @@ const BookHome = () => {
               renderItem={({ item }) => (
                 <TouchableOpacity onPress={() => handleOpenBook(item)}>
                   <View style={styles.book}>
-                    <BookCoverView filePath={item.path} style={styles.cover} />
+                    <BookCoverView filePath={item.path} style={{ ...styles.cover, width: rootStore.bookWidth }} />
                     <View style={styles.info}>
                       <Text
                         style={styles.name}

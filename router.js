@@ -26,6 +26,9 @@ const Router = () => {
     const old = rootStore.bookList.slice();
     switch (event) {
       case 'CREATE':
+        if (old.some(item => item.path === path)) {
+          return;
+        }
         rootStore.setBookList([book, ...old]);
         break;
       case 'DELETE':

@@ -21,9 +21,12 @@ const styles = StyleSheet.create({
     borderColor: '#000',
     position: 'relative',
     margin: 3,
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
+    flexDirection: 'row',
   },
   cover: {
-    minWidth: 144,
+    bottom: 0,
     aspectRatio: 3 / 4,
   },
   info: {
