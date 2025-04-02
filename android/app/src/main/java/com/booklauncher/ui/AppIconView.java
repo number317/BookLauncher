@@ -15,7 +15,7 @@ public class AppIconView extends androidx.appcompat.widget.AppCompatImageView {
             PackageManager packageManager = getContext().getPackageManager();
             ApplicationInfo appInfo = packageManager.getApplicationInfo(packageName, 0);
             Drawable icon = appInfo.loadIcon(packageManager);
-            this.setImageDrawable(icon);
+            setImageDrawable(icon);
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }

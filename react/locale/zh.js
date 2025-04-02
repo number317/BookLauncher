@@ -8,6 +8,11 @@ const common = {
   setting: '设置',
 };
 
+const book = {
+  'book.loading.tip': '书籍加载中...',
+  'book.empty.tip': '/sdcard/Books 暂无书籍',
+};
+
 const app = {
   'app.list.reading': '读取应用列表中...',
 };
@@ -26,6 +31,7 @@ const setting = {
 
 export default {
   ...common,
+  ...book,
   ...app,
   ...setting,
 };

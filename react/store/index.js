@@ -18,21 +18,25 @@ const StoreProvider = (props) => {
      * eventName: AppInstalled, AppUpdated, AppUninstalled
      */
     const { eventName, packageName, appName } = event;
+    const old = rootStore.appList.slice();
+    let updateApp;
     switch (eventName) {
       case 'AppInstalled':
-        rootStore.setAppList(old => [...old, { appName, packageName }]);
+        console.info('info: new app install', packageName);
+        if (old.some(appInfo => appInfo.packageName === packageName)) {
+          return;
+        }
+        rootStore.setAppList([...old, { appName, packageName }]);
         break;
       case 'AppUpdated':
-        rootStore.setAppList(old => {
-          const newList = old.slice();
-          const updateApp = newList.find(appInfo => appInfo.packageName === packageName);
-          updateApp.appName = appName;
-          return newList;
-        });
+        updateApp = old.find(appInfo => appInfo.packageName === packageName);
+        updateApp.appName = appName;
+        rootStore.setAppList(old);
         setLocalData('appList', rootStore.appList.slice());
         break;
       case 'AppUninstalled':
-        rootStore.setAppList(old => old.filter(appInfo => appInfo.packageName !== packageName));
+        console.info('info: app uninstall', packageName);
+        rootStore.setAppList(old.filter(appInfo => appInfo.packageName !== packageName));
         break;
       default:
         console.info('info: unknow app event', eventName);
@@ -47,17 +51,19 @@ const StoreProvider = (props) => {
   };
 
   useEffect(() => {
+    rootStore.queryLocalLang();
+  }, []);
+
+  useEffect(() => {
     const init = async () => {
       rootStore.setAppLoading(true);
       rootStore.queryBookList();
       const [hello, appMode, lang] = await rootStore.queryCacheConfig();
-      rootStore.setHello(hello || 'Hello world!');
-      rootStore.setAppMode(appMode || 'book');
       if (lang) {
         rootStore.setLang(lang);
-      } else {
-        await rootStore.queryLocalLang();
       }
+      rootStore.setHello(hello || 'Hello world!');
+      rootStore.setAppMode(appMode || 'book');
 
       const batteryInfo = await _BatteryStatus.getBatteryStatus();
       rootStore.setBatteryLevel(batteryInfo.batteryLevel);

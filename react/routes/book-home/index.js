@@ -21,30 +21,43 @@ const BookHome = () => {
       <TopStatus />
       <View style={styles.main}>
         <NavitaionBar currentMenu="Book" />
-        <View style={styles.list}>
-          {
-            rootStore.bookList.length > 0 ? (
-              <FlatList
-                data={rootStore.bookList}
-                keyExtractor={(item) => item.name}  
-                numColumns={3}
-                columnWrapperStyle={{ justifyContent: 'space-between' }}
-                renderItem={({ item }) => (
-                  <TouchableOpacity onPress={() => handleOpenBook(item)}>
-                    <View style={styles.book}>
-                      <View style={styles.info}>
-                        <Text>{item.name}</Text>
-                      </View>
-                      <BookCoverView filePath={item.path} style={styles.cover} />
+        {
+          rootStore.bookLoading && (
+            <View style={styles.empty}>
+              <Text>{rootStore.formatMessage('book.loading.tip')}</Text>
+            </View>
+          )
+        }
+        {
+          rootStore.bookList.length > 0 ? (
+            <FlatList
+              data={rootStore.bookList}
+              keyExtractor={(item) => item.name}  
+              numColumns={3}
+              contentContainerStyle={styles.grid}
+              renderItem={({ item }) => (
+                <TouchableOpacity onPress={() => handleOpenBook(item)}>
+                  <View style={styles.book}>
+                    <BookCoverView filePath={item.path} style={styles.cover} />
+                    <View style={styles.info}>
+                      <Text
+                        style={styles.name}
+                        numberOfLines={1}
+                        ellipsizeMode="middle"
+                      >
+                        {item.name.split('.')[0]}
+                      </Text>
                     </View>
-                  </TouchableOpacity>
-                )}
-              />
-            ) : (
-              <Text>/sdcard/Books 暂无书籍</Text>
-            )
-          }
-        </View>
+                  </View>
+                </TouchableOpacity>
+              )}
+            />
+          ) : (
+            <View style={styles.empty}>
+              <Text>{rootStore.formatMessage('book.empty.tip')}</Text>
+            </View>
+          )
+        }
       </View>
     </View>
   );

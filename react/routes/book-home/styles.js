@@ -13,23 +13,34 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: '#000',
   },
-  list: {
-    flex: 1,
-    padding: 5,
+  grid: {
+    padding: 3,
   },
   book: {
     borderWidth: 1,
     borderColor: '#000',
     position: 'relative',
+    margin: 3,
   },
   cover: {
     minWidth: 144,
     aspectRatio: 3 / 4,
-    borderWidth: 1,
-    borderColor: '#ddd',
   },
   info: {
     position: 'absolute',
+    bottom: 0,
+    right: 0,
+    paddingHorizontal: 5,
+    width: '100%',
+    alignItems: 'flex-end',
+  },
+  name: {
+    fontSize: 8,
+  },
+  empty: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 

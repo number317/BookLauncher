@@ -1,6 +1,6 @@
 import { NativeModules, Dimensions } from 'react-native';
 import { useLocalObservable } from "mobx-react-lite"
-import { getLocalData } from '../components/global-store';
+import { getLocalData, setLocalData } from '../components/global-store';
 import GlobalConfig from '../components/global-config';
 import I18nMap from '../locale';
 
@@ -37,10 +37,10 @@ const RootStore = () => useLocalObservable(() => ({
     this,this.setBookLoading(true);
     try {
       const booksStr = await _BookManager.getBookList();
-      this.bookList = JSON.parse(booksStr);
+      this.setBookList(JSON.parse(booksStr));
     } catch (error) {
-      console.error('error: ', error);
-      this.bookList = [];
+      console.error('error: get books error ', error);
+      this.setBookList([]);
     }
     this.setBookLoading(false);
   },
@@ -97,6 +97,7 @@ const RootStore = () => useLocalObservable(() => ({
     return new Promise(resolve => {
       _LocalInfo.getLocalLanguage((currentLang) => {
         this.setLang(currentLang);
+        setLocalData('lang', currentLang);
         resolve();
       });
     });

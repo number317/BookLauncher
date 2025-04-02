@@ -5,9 +5,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.ParcelFileDescriptor;
-import android.util.AttributeSet;
 import android.util.Log;
-import androidx.annotation.Nullable;
 import com.shockwave.pdfium.PdfDocument;
 import com.shockwave.pdfium.PdfiumCore;
 
@@ -25,10 +23,6 @@ public class BookCoverView extends androidx.appcompat.widget.AppCompatImageView 
     private static final String cacheDir = Environment.getExternalStorageDirectory() + "/Books/.cache";
 
     public BookCoverView(Context context) {
-        super(context);
-    }
-
-    public BookCoverView(Context context, @Nullable AttributeSet attrs) {
         super(context);
     }
 
@@ -178,6 +172,7 @@ public class BookCoverView extends androidx.appcompat.widget.AppCompatImageView 
 
             // 回收 Bitmap 以释放内存
             bitmap.recycle();
+            bitmap = null;
         } catch (Exception e) {
             e.printStackTrace();
             throw e;
