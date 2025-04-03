@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { observer } from 'mobx-react-lite';
-import { View, TouchableWithoutFeedback, InteractionManager } from 'react-native';
+import { View, Text, TouchableWithoutFeedback, TouchableOpacity, InteractionManager } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Store from '../../store';
 import Icon from '../icon';
@@ -38,6 +38,21 @@ const NavigationBar = (props) => {
           </View>
         </TouchableWithoutFeedback>
       </View>
+      {
+        currentMenu === 'Book' && rootStore.bookPages > 1 && (
+          <View style={styles.pager}>
+            <TouchableOpacity onPress={() => rootStore.setBookCurrentPage(Math.max(1, rootStore.bookCurrentPage - 1))}>
+              <Icon name="arrow-up" size={20} />
+            </TouchableOpacity>
+            <Text>{rootStore.bookCurrentPage}</Text>
+            <Text>/</Text>
+            <Text>{rootStore.bookPages}</Text>
+            <TouchableOpacity onPress={() => rootStore.setBookCurrentPage(Math.min(rootStore.bookPages, rootStore.bookCurrentPage + 1))}>
+              <Icon name="arrow-down" size={20} />
+            </TouchableOpacity>
+          </View>
+        )
+      }
     </View> 
   )
 };

@@ -1,10 +1,10 @@
 package com.booklauncher;
+
 import com.booklauncher.module.AppManager;
 import com.booklauncher.module.BatteryStatus;
 import com.booklauncher.module.BookManager;
 import com.booklauncher.module.LocalInfo;
 import com.booklauncher.ui.AppIconViewManager;
-import com.booklauncher.ui.BookCoverViewManager;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.bridge.NativeModule;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -19,7 +19,6 @@ public class MyModulePackage implements ReactPackage {
     public List<ViewManager> createViewManagers(ReactApplicationContext reactContext) {
         List<ViewManager> viewManagers = new ArrayList<>();
         viewManagers.add(new AppIconViewManager());
-        viewManagers.add(new BookCoverViewManager());
         return viewManagers;
     }
 

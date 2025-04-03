@@ -11,6 +11,7 @@ const common = {
 const book = {
   'book.loading.tip': 'Loading book list...',
   'book.empty.tip': 'There is no books in /sdcard/Books',
+  'book.no.koreader': 'Koreader is not installed',
 };
 
 const app = {

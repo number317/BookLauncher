@@ -42,29 +42,55 @@ const RootStore = () => useLocalObservable(() => ({
     this.bookList = data;
   },
   bookWidth: 0,
-  setBooksWidth(data) {
+  setBookWidth(data) {
     this.bookWidth = data;
+  },
+  bookColumns: 0,
+  setBookColumns(data) {
+    this.bookColumns = data;
+  },
+  bookRows: 0,
+  setBookRows(data) {
+    this.bookRows = data;
+  },
+  bookPages: 0,
+  setBookPages(data) {
+    this.bookPages = data;
+  },
+  bookCurrentPage: 1,
+  setBookCurrentPage(data) {
+    this.bookCurrentPage = data;
   },
   async queryBookList() {
     this,this.setBookLoading(true);
-    console.info('info: DEVICE_WIDTH', DEVICE_WIDTH);
-    console.info('info: DEVICE_HEIGHT', DEVICE_HEIGHT);
-    let booksEachLine;
+    let columns;
     if (DEVICE_WIDTH <= 600) {
-      booksEachLine = 3;
+      columns = 3;
     } else if (DEVICE_WIDTH <= 800) {
-      booksEachLine = 4;
+      columns = 4;
     } else {
-      booksEachLine = 6;
+      columns = 6;
     }
 
-    const booksWidth = Math.floor((LIST_CONTAINER_WIDTH - 3*2 - 3*booksEachLine*2) / booksEachLine);
-    console.info('info: booksWidth', booksWidth);
-    this.setBooksWidth(booksWidth);
-
+    this.setBookColumns(columns);
+    // (list_width - padding * 2) / ((border + margin) * 2 * columns))
+    const width = Math.floor((LIST_CONTAINER_WIDTH - 3*2 - 4*columns*2) / columns);
+    const height = Math.floor(width * 4/3);
+    const rows = Math.floor((LIST_CONTAINER_HEIGHT - 3*2) / (height + 4 * 2));
+    
     try {
-      const booksStr = await _BookManager.getBookList();
-      this.setBookList(JSON.parse(booksStr));
+      const books = await _BookManager.getBookList();
+      this.setBookList(books);
+
+      if (rows * columns < books.length) {
+        this.setBookPages(Math.ceil(books.length / (rows * columns)));
+        console.info('info: bookPages', this.bookPages);
+      } else {
+        this.setBookPages(1);
+      }
+
+      this.setBookRows(rows);
+      this.setBookWidth(width);
     } catch (error) {
       console.error('error: get books error ', error);
       this.setBookList([]);
@@ -128,6 +154,10 @@ const RootStore = () => useLocalObservable(() => ({
         resolve();
       });
     });
+  },
+  async changeLang(lang) {
+    this.setLang(lang); 
+    setLocalData('lang', lang);
   },
   formatMessage(key) {
     if (I18nMap[this.lang]) {

@@ -1,20 +1,21 @@
 import React, { useContext } from 'react';
 import { observer } from 'mobx-react-lite';
-import { View, Text, FlatList, TouchableOpacity, NativeModules } from 'react-native';
+import { View, Text, FlatList } from 'react-native';
 import TopStatus from '../../components/top-status';
 import NavitaionBar from '../../components/navigation-bar';
-import { BookCoverView } from '../../components/native-components';
+import Book from './Book';
 import Store from '../../store';
 import styles from './styles';
 
-const { _BookManager } = NativeModules;
-
 const BookHome = () => {
   const { rootStore } = useContext(Store);
-
-  const handleOpenBook = (book) => {
-    _BookManager.openBook(book.path);
-  };
+  const {
+    bookList,
+    bookColumns,
+    bookRows,
+    bookPages,
+    bookCurrentPage,
+  } = rootStore;
 
   return (
     <View style={styles.wrap}>
@@ -29,28 +30,16 @@ const BookHome = () => {
           )
         }
         {
-          rootStore.bookList.length > 0 ? (
+          bookList.length > 0 ? (
             <FlatList
-              data={rootStore.bookList}
+              data={bookPages > 1 ? bookList.slice((bookCurrentPage - 1) * bookColumns * bookRows, bookColumns * bookRows * bookCurrentPage) : bookList}
               keyExtractor={(item) => item.name}  
-              numColumns={3}
+              numColumns={bookColumns}
+              pagingEnable
+              showHorizontalScrollIndicator={false}
+              showVerticalScrollIndicator={false}
               contentContainerStyle={styles.grid}
-              renderItem={({ item }) => (
-                <TouchableOpacity onPress={() => handleOpenBook(item)}>
-                  <View style={styles.book}>
-                    <BookCoverView filePath={item.path} style={{ ...styles.cover, width: rootStore.bookWidth }} />
-                    <View style={styles.info}>
-                      <Text
-                        style={styles.name}
-                        numberOfLines={1}
-                        ellipsizeMode="middle"
-                      >
-                        {item.name.split('.')[0]}
-                      </Text>
-                    </View>
-                  </View>
-                </TouchableOpacity>
-              )}
+              renderItem={({ item, index }) => <Book book={item} index={index} />}
             />
           ) : (
             <View style={styles.empty}>

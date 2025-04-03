@@ -146,11 +146,17 @@ const Setting = () => {
       {
         showModal === 'language' && (
           <Modal handleClose={handleCloseModal} displayType="bottom">
-            <View>
-              <View>
-                <Text>English</Text>
-                <Text>简体中文</Text>
-              </View>
+            <View style={styles.langList}>
+              <TouchableOpacity onPress={() => rootStore.changeLang('en')}>
+                <View style={styles.langItem}>
+                  <Text>English</Text>
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => rootStore.changeLang('zh')}>
+                <View style={styles.langItem}>
+                  <Text>简体中文</Text>
+                </View>
+              </TouchableOpacity>
             </View>
           </Modal>
         )

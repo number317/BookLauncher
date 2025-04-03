@@ -13,6 +13,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10, 
     borderRightWidth: 1,
     borderRightColor: '#000000',
+    position: 'relative',
   },
   top: {
     
@@ -23,6 +24,15 @@ const styles = StyleSheet.create({
   iconWrap: {
     marginBottom: 10,
   },
+  pager: {
+    position: 'absolute',
+    width: '100%',
+    height: 200,
+    alignItems: 'center',
+    justifyContent: 'center',
+    top: '50%',
+    bottom: '50%',
+  }
 });
 
 export default styles;

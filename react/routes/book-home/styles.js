@@ -39,6 +39,7 @@ const styles = StyleSheet.create({
   },
   name: {
     fontSize: 8,
+    color: '#666',
   },
   empty: {
     flex: 1,

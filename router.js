@@ -1,5 +1,6 @@
 import React, { useContext, useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
+import { runInAction, set } from 'mobx';
 import { StatusBar, View, Text, NativeModules, NativeEventEmitter } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -16,24 +17,27 @@ const Router = () => {
   const { rootStore } = useContext(Store);
 
   const handleBookChange = (data) => {
-    const { event, name, type, path } = data;
-    console.info('info: event, path', event, path);
-    const book = {
-      name,
-      path,
-      type,
-    };
+    const { event, book} = data;
+    console.info('info: event, book, cover', event, book);
     const old = rootStore.bookList.slice();
     switch (event) {
       case 'CREATE':
-        if (old.some(item => item.path === path)) {
+        if (old.some(item => item.path === book.path)) {
           return;
         }
         rootStore.setBookList([book, ...old]);
         break;
       case 'DELETE':
-        rootStore.setBookList(old.filter(item => item.path !== path));
+        rootStore.setBookList(old.filter(item => item.path !== book.path));
         break;
+      case 'COVER-READY': {
+        const target = rootStore.bookList.find(item => item.path === book.path);
+        runInAction(() => {
+          set(target, 'coverReady', true);
+        });
+        console.info('info: target update', target);
+        break;
+      }
       default:
         console.info('info: unknow book event', event);
     }

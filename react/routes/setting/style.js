@@ -57,6 +57,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  langList: {
+    paddingHorizontal: 10,
+  },
+  langItem: {
+    height: 40,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    borderBottomWidth: 1,
+    borderColor: '#000',
+  }
 });
 
 export default styles;
