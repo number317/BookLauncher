@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
     height: 200,
     alignItems: 'center',
     justifyContent: 'center',
-    top: '50%',
+    top: '30%',
     bottom: '50%',
   }
 });

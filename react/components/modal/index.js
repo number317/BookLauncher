@@ -23,7 +23,7 @@ const Modal = (props) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.modal}>
+      <View style={{ ...styles.modal, ...style }}>
         {
           showHeader && (
             <View style={styles.header}>
@@ -33,7 +33,7 @@ const Modal = (props) => {
             </View>
           )
         }
-        <View style={{ ...styles.body, ...style }}>
+        <View style={ styles.body }>
           { children }
         </View>
         {

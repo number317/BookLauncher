@@ -57,7 +57,6 @@ const StoreProvider = (props) => {
   useEffect(() => {
     const init = async () => {
       rootStore.setAppLoading(true);
-      rootStore.queryBookList();
       const [hello, appMode, lang] = await rootStore.queryCacheConfig();
       if (lang) {
         rootStore.setLang(lang);

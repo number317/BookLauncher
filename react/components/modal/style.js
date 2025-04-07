@@ -15,7 +15,7 @@ const styles_center = StyleSheet.create({
   },
   modal: {
     minHeight: 300,
-    minWidth: 400,
+    minWidth: '75%',
     backgroundColor: Colors.white,
     borderWidth: 1,
     borderRadius: 5,

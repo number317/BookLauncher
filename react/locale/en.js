@@ -6,6 +6,8 @@ const common = {
   hide: 'hide',
   show: 'show',
   setting: 'setting',
+  delete: 'Delete',
+  read: 'Read',
 };
 
 const book = {

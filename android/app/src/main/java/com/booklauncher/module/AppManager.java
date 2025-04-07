@@ -6,7 +6,6 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.util.Log;
 import androidx.annotation.NonNull;
 import com.facebook.react.bridge.*;
 
@@ -44,7 +43,6 @@ public class AppManager extends ReactContextBaseJavaModule {
                 appList.pushMap(appMap);
             }
         }
-        Log.d("AppManager", "appList: " + appList);
         callBack.invoke(appList);
     }
 

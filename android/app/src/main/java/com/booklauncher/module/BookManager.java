@@ -210,6 +210,25 @@ public class BookManager extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
+    public void deleteBook(String filePath, Promise promise) {
+        try {
+            File file = new File(filePath);
+            boolean isPdf = file.getName().endsWith(".pdf");
+            String coverPath = file.getParentFile().getAbsolutePath() + "/.cache/" + file.getName().replace(isPdf ? ".pdf" : ".epub", ".jpg");
+            File cache = new File(coverPath);
+            if (file.exists()) {
+                file.delete();
+                if (cache.exists()) {
+                    cache.delete();
+                }
+                promise.resolve("File deleted");
+            }
+        } catch (Exception e) {
+            promise.reject("ERROR", e.getMessage());
+        }
+    }
+
+    @ReactMethod
     public void openBook(String filePath, Promise promise) {
         // check is package installed
         if (!this.isPackageInstalled) {
@@ -273,7 +292,6 @@ public class BookManager extends ReactContextBaseJavaModule {
             ZipEntry opfEntry = null;
             ZipEntry coverEntry = null;
 
-            // 遍历 ZIP 文件找到 content.opf
             Enumeration<? extends ZipEntry> entries = epubFile.entries();
             while (entries.hasMoreElements()) {
                 ZipEntry entry = entries.nextElement();
@@ -292,37 +310,34 @@ public class BookManager extends ReactContextBaseJavaModule {
             String relativeCoverPath = parseOpfForCoverPath(opfInputStream);
 
             if (relativeCoverPath != null) {
-                // 获取 opf 的路径并拼接封面路径
-                String opfPath = opfEntry.getName(); // e.g., "OEBPS/content.opf"
-                String baseDir = opfPath.substring(0, opfPath.lastIndexOf('/') + 1); // e.g., "OEBPS/"
+                String opfPath = opfEntry.getName();
+                String baseDir = opfPath.substring(0, opfPath.lastIndexOf('/') + 1);
                 String fullPath = baseDir + relativeCoverPath;
 
                 coverEntry = epubFile.getEntry(URLDecoder.decode(fullPath));
-            }
 
-            if (coverEntry == null) {
-                throw new Exception("Cover image not found");
-            }
+                if (coverEntry != null) {
+                    // 保存cover为缓存图片
+                    InputStream coverInputStream = epubFile.getInputStream(coverEntry);
 
-            // 保存cover为缓存图片
-            InputStream coverInputStream = epubFile.getInputStream(coverEntry);
+                    try (FileOutputStream fileOutputStream = new FileOutputStream(cover)) {
+                        byte[] buffer = new byte[1024];
+                        int length;
+                        while ((length = coverInputStream.read(buffer)) > 0) {
+                            fileOutputStream.write(buffer, 0, length);
+                        }
 
-            try (FileOutputStream fileOutputStream = new FileOutputStream(cover)) {
-                byte[] buffer = new byte[1024];
-                int length;
-                while ((length = coverInputStream.read(buffer)) > 0) {
-                    fileOutputStream.write(buffer, 0, length);
+                        // 通知更新封面
+                        WritableMap params = Arguments.createMap();
+                        params.putString("event", "COVER-READY");
+                        params.putMap("book", book.toWritableMap());
+                        Log.d("BookManager", "update cover event");
+                        sendEvent("BookChanged", params);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
-
-                // 通知更新封面
-                WritableMap params = Arguments.createMap();
-                params.putString("event", "COVER-READY");
-                params.putMap("book", book.toWritableMap());
-                sendEvent("BookChanged", params);
-            } catch (Exception e) {
-                e.printStackTrace();
             }
-
         } finally {
             if (epubFile != null) {
                 epubFile.close();
@@ -338,14 +353,14 @@ public class BookManager extends ReactContextBaseJavaModule {
         // <item id="cover-id" href="cover.jpg" media-type="image/jpeg" />
         BufferedReader reader = new BufferedReader(new InputStreamReader(opfInputStream));
         String line;
-        String coverId = null;
+        String coverId = "cover";
         String coverPath = null;
 
         while ((line = reader.readLine()) != null) {
             if (line.contains("name=\"cover\"")) {
                 int contentIndex = line.indexOf("content=\"");
                 if (contentIndex != -1) {
-                    coverId = line.substring(contentIndex + 9, line.indexOf("\"", contentIndex + 9));
+                    coverId = line.substring(contentIndex + 9, line.indexOf("\"", contentIndex + 9)).toLowerCase();
                 }
             }
 

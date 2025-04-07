@@ -48,6 +48,7 @@ const Router = () => {
       _BookManager.initWatch();
       _BookManager.startWatch().then((res) => {
         console.info('info: start watch: ', res);
+        rootStore.queryBookList();
       }).catch((error) => {
         console.error('error: start watch', error);
       });

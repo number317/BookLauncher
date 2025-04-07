@@ -7,7 +7,7 @@ import styles from './styles';
 const { _BookManager } = NativeModules;
 
 const Book = (props) => {
-  const { book } = props;
+  const { book, handleBookInfo } = props;
   const { rootStore } = useContext(Store);
 
   const handleOpenBook = (book) => {
@@ -20,30 +20,35 @@ const Book = (props) => {
   };
 
   return (
-    <TouchableOpacity onPress={() => handleOpenBook(book)}>
-      <View style={styles.book}>
-        {
-          book.coverReady ? (
-            <Image
-              source={{ uri: `file://${book.cover}` }}
-              style={{ ...styles.cover, width: rootStore.bookWidth }}
-              resizeMode="cover"
-            />
-          ) : (
-            <View style={{ ...styles.cover, width: rootStore.bookWidth }} />
-          )
-        }
-        <View style={styles.info}>
-          <Text
-            style={styles.name}
-            numberOfLines={1}
-            ellipsizeMode="middle"
-          >
-            {book.name.split('.')[0]}
-          </Text>
+    <View>
+      <TouchableOpacity
+        onPress={() => handleOpenBook(book)}
+        onLongPress={() => handleBookInfo(book)}
+      >
+        <View style={styles.book}>
+          {
+            book.coverReady ? (
+              <Image
+                source={{ uri: `file://${book.cover}` }}
+                style={{ ...styles.cover, width: rootStore.bookWidth }}
+                resizeMode="cover"
+              />
+            ) : (
+              <View style={{ ...styles.cover, width: rootStore.bookWidth }} />
+            )
+          }
+          <View style={styles.info}>
+            <Text
+              style={styles.name}
+              numberOfLines={1}
+              ellipsizeMode="middle"
+            >
+              {book.name.split('.')[0]}
+            </Text>
+          </View>
         </View>
-      </View>
-    </TouchableOpacity>
+      </TouchableOpacity>
+    </View>
   );
 };
 

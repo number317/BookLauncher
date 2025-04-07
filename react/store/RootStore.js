@@ -40,6 +40,15 @@ const RootStore = () => useLocalObservable(() => ({
   bookList: [],
   setBookList(data) {
     this.bookList = data;
+    if (this.bookRows && this.bookColumns) {
+      const pages = Math.ceil(this.bookList.length / this.bookColumns / this.bookRows);
+      if (pages !== this.bookPages) {
+        this.setBookPages(pages);
+      }
+      if (pages === 1) {
+        this.setBookCurrentPage(1);
+      }
+    }
   },
   bookWidth: 0,
   setBookWidth(data) {
@@ -62,6 +71,9 @@ const RootStore = () => useLocalObservable(() => ({
     this.bookCurrentPage = data;
   },
   async queryBookList() {
+    if (this.bookList.length > 0) {
+      return;
+    }
     this,this.setBookLoading(true);
     let columns;
     if (DEVICE_WIDTH <= 600) {

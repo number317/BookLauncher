@@ -46,6 +46,33 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  modal: {
+    height: 350,
+    width: '80%',
+  },
+  modalBody: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 20,
+  },
+  detail: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  image: {
+    width: 150,
+    height: 225,
+    borderColor: '#000',
+    borderWidth: 1,
+  },
+  action: {
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+  },
 });
 
 export default styles;
