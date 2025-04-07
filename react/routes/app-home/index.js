@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   Pressable,
   ScrollView,
+  FlatList,
 } from 'react-native';
 import TopStatus from '../../components/top-status';
 import Time from '../../components/time';
@@ -26,9 +27,11 @@ const AppHome = () => {
     formatMessage,
     appLoading,
     appList,
-    appPadding,
-    appPageSize,
-    currentAppPage,
+    appRows,
+    appColumns,
+    appCardSize,
+    appPages,
+    appCurrentPage,
   } = rootStore;
 
   const [showAppInfo, setShowAppInfo] = useState(false);
@@ -58,26 +61,16 @@ const AppHome = () => {
   const renderAppList = () => {
     if (rootStore.appMode === 'book') {
       return (
-        <View style={{ ...styles.appContainer, paddingHorizontal: appPadding[0], paddingVertical: appPadding[1] }}>
-          {appList.filter(appInfo => !appInfo.hide).slice((currentAppPage- 1) * appPageSize, currentAppPage * appPageSize).map((appInfo) => (
-            <View style={styles.appCard} key={appInfo.packageName}>
-              <Pressable
-                onPress={() => handleStartApp(appInfo)}
-                onLongPress={() => handleShowAppInfo(appInfo)}
-              >
-                <View style={styles.appInner}>
-                  <AppIconView
-                    style={styles.appIcon}
-                    packageName={appInfo.packageName}
-                  />
-                  <Text style={styles.appName} numberOfLines={1} ellipsizeMode="tail">
-                    {appInfo.appName}
-                  </Text>
-                </View>
-              </Pressable>
-            </View>
-          ))}
-        </View>
+        <FlatList
+          data={appList.filter(appInfo => !appInfo.hide).slice((appCurrentPage- 1) * appRows * appColumns, appCurrentPage * appRows * appColumns)}
+          keyExtractor={(item) => item.packageName}
+          numColumns={appColumns}
+          pagingEnable
+          showHorizontalScrollIndicator={false}
+          showVerticalScrollIndicator={false}
+          contentContainerStyle={styles.grid}
+          renderItem={({ item, index }) => renderApp(item, index)}
+        />
       );
     } else {
       return (
@@ -99,6 +92,25 @@ const AppHome = () => {
     }
   };
 
+  const renderApp = (appInfo) => (
+    <View style={{ ...styles.appCard, width: appCardSize, height: appCardSize }} key={appInfo.packageName}>
+      <Pressable
+        onPress={() => handleStartApp(appInfo)}
+        onLongPress={() => handleShowAppInfo(appInfo)}
+      >
+        <View style={styles.appInner}>
+          <AppIconView
+            style={styles.appIcon}
+            packageName={appInfo.packageName}
+          />
+          <Text style={styles.appName} numberOfLines={1} ellipsizeMode="tail">
+            {appInfo.appName}
+          </Text>
+        </View>
+      </Pressable>
+    </View>
+  );
+
   return (
     <View style={styles.wrap}>
       <TopStatus />
@@ -113,22 +125,9 @@ const AppHome = () => {
           ) : renderAppList()
         }
         {
-          rootStore.appMode === 'book' && Math.ceil(appList.length / appPageSize) > 1 && !appLoading && (
-            <View style={styles.pagination}>
-              {
-                new Array(Math.ceil(appList.length / appPageSize)).fill('0').map((_, index) => (
-                  <TouchableOpacity onPress={() => rootStore.setCurrentAppPage(index + 1)} key={index}>
-                    <Text>{index + 1 === currentAppPage ? '●' : '○'}</Text>
-                  </TouchableOpacity>
-                ))
-              }
-            </View>
-          )
-        }
-        {
           showAppInfo && (
-            <Modal handleClose={() => setShowAppInfo(false)}>
-              <View style={styles.modal}>
+            <Modal handleClose={() => setShowAppInfo(false)} style={styles.modal}>
+              <View style={styles.modalContainer}>
                 <AppIconView
                   style={styles.appIcon}
                   packageName={showAppInfo.packageName}

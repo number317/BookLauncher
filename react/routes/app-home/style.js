@@ -27,27 +27,26 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  grid: {
+    padding: 3,
+  },
   appContainer: {
-    backgroundColor: Colors.white,
-    flexDirection: 'row',
     flex: 1,
-    flexWrap: 'wrap',
+    flexDirection: 'row',
+    backgroundColor: Colors.white,
   },
   appCard: {
     width: APP_CARD_WIDTH,
     height: APP_CARD_HEIGHT,
-    padding: 5,
     alignItems: 'center',
     justifyContent: 'center',
+    margin: 3,
   },
   appInner: {
-    width: '100%',
+    width: APP_CARD_WIDTH,
     height: '100%',
-    flex: 1,
-    overflow: 'hidden',
     alignItems: 'center',
-    justifyContent: 'flex-start',
-    backgroundColor: Colors.green,
+    justifyContent: 'center',
   },
   appIcon: {
     width: 50,
@@ -77,17 +76,20 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   modal: {
+    width: '75%',
+  },
+  modalContainer: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
   action: {
-    width: 400,
+    width: '100%',
     height: 80,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 100,
+    paddingHorizontal: 40,
   },
   pagination: {
     position: 'absolute',

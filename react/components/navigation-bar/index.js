@@ -53,6 +53,21 @@ const NavigationBar = (props) => {
           </View>
         )
       }
+      {
+        currentMenu === 'App' && rootStore.appPages > 1 && (
+          <View style={styles.pager}>
+            <TouchableOpacity onPress={() => rootStore.setAppCurrentPage(Math.max(1, rootStore.appCurrentPage - 1))}>
+              <Icon name="arrow-up" size={20} />
+            </TouchableOpacity>
+            <Text>{rootStore.appCurrentPage}</Text>
+            <Text>/</Text>
+            <Text>{rootStore.appPages}</Text>
+            <TouchableOpacity onPress={() => rootStore.setAppCurrentPage(Math.min(rootStore.appPages, rootStore.appCurrentPage + 1))}>
+              <Icon name="arrow-down" size={20} />
+            </TouchableOpacity>
+          </View>
+        )
+      }
     </View> 
   )
 };

@@ -8,12 +8,8 @@ const { _LocalInfo, _AppManager, _BookManager } = NativeModules;
 
 const {
   DEVICE_WIDTH,
-  DEVICE_HEIGHT,
-  NAVIGATION_BAR_WIDTH,
   LIST_CONTAINER_WIDTH,
   LIST_CONTAINER_HEIGHT,
-  APP_CARD_WIDTH,
-  APP_CARD_HEIGHT,
 } = GlobalConfig;
 
 const RootStore = () => useLocalObservable(() => ({
@@ -88,7 +84,7 @@ const RootStore = () => useLocalObservable(() => ({
     // (list_width - padding * 2) / ((border + margin) * 2 * columns))
     const width = Math.floor((LIST_CONTAINER_WIDTH - 3*2 - 4*columns*2) / columns);
     const height = Math.floor(width * 4/3);
-    const rows = Math.floor((LIST_CONTAINER_HEIGHT - 3*2) / (height + 4 * 2));
+    const rows = Math.floor((LIST_CONTAINER_HEIGHT - 3) / (height + 4 * 2));
     
     try {
       const books = await _BookManager.getBookList();
@@ -115,22 +111,23 @@ const RootStore = () => useLocalObservable(() => ({
   },
   queryAppList() {
     _AppManager.getAppList(async (result) => {
-      console.info('info: get app list', result);
       const cacheAppList = await getLocalData('appList') || [];
       const notCacheList = result.filter(x => !cacheAppList.some(y => y.packageName === x.packageName));
       cacheAppList.push(...notCacheList);
       this.setAppList(cacheAppList);
 
-      const appCountPerLine = Math.floor(LIST_CONTAINER_WIDTH / APP_CARD_WIDTH);
-      const appPaddingHorizontal = (DEVICE_WIDTH - appCountPerLine * APP_CARD_WIDTH - NAVIGATION_BAR_WIDTH) / 2;
+      const columns = Math.floor((LIST_CONTAINER_WIDTH - 3*2) / (80 + 4 * 2));
+      const size = Math.floor((LIST_CONTAINER_WIDTH - 3*2) / columns) - 8;
+      const rows = Math.floor((LIST_CONTAINER_HEIGHT - 3) / (size + 4 * 2));
 
-      const appCountPerColumn = Math.floor(LIST_CONTAINER_HEIGHT / APP_CARD_HEIGHT);
-      const appPaddingVertical = (DEVICE_HEIGHT - appCountPerColumn * APP_CARD_HEIGHT) / 2;
+      const pageSizeApp = columns * rows;
+      const pages = Math.ceil(this.appList.length / pageSizeApp);
 
-      const pageSizeApp = appCountPerLine * appCountPerColumn;
-
-      this.setAppPageSize(pageSizeApp);
-      this.setAppPadding([appPaddingHorizontal, appPaddingVertical]);
+      console.info('info: columns, row', columns, rows);
+      this.setAppRows(rows);
+      this.setAppColumns(columns);
+      this.setAppCardSize(size);
+      this.setAppPages(pages);
       this.setAppLoading(false);
     });
   },
@@ -138,20 +135,29 @@ const RootStore = () => useLocalObservable(() => ({
   setAppLoading(data) {
     this.appLoading = data;
   },
-
-  appPadding: [],
-  setAppPadding(data) {
-    this.appPadding = data;
+  appCardSize: 0,
+  setAppCardSize(data) {
+    this.appCardSize = data;
   },
 
-  appPageSize: 0,
-  setAppPageSize(data) {
-    this.appPageSize = data;
+  appRows: 0,
+  setAppRows(data) {
+    this.appRows = data;
   },
 
-  currentAppPage: 1,
-  setCurrentAppPage(data) {
-    this.currentAppPage = data;
+  appColumns: 0,
+  setAppColumns(data) {
+    this.appColumns = data;
+  },
+
+  appPages: 0,
+  setAppPages(data) {
+    this.appPages = data;
+  },
+
+  appCurrentPage: 1,
+  setAppCurrentPage(data) {
+    this.appCurrentPage = data;
   },
 
   lang: '',

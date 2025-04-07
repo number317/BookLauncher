@@ -295,46 +295,43 @@ public class BookManager extends ReactContextBaseJavaModule {
             Enumeration<? extends ZipEntry> entries = epubFile.entries();
             while (entries.hasMoreElements()) {
                 ZipEntry entry = entries.nextElement();
-                if (entry.getName().endsWith("content.opf")) {
+                if (entry.getName().endsWith(".opf")) {
                     opfEntry = entry;
                     break;
                 }
             }
 
-            if (opfEntry == null) {
-                throw new Exception("content.opf not found");
-            }
+            if (opfEntry != null) {
+                InputStream opfInputStream = epubFile.getInputStream(opfEntry);
+                String relativeCoverPath = parseOpfForCoverPath(opfInputStream);
 
-            // 读取 content.opf 并提取封面路径
-            InputStream opfInputStream = epubFile.getInputStream(opfEntry);
-            String relativeCoverPath = parseOpfForCoverPath(opfInputStream);
+                if (relativeCoverPath != null) {
+                    String opfPath = opfEntry.getName();
+                    String baseDir = opfPath.substring(0, opfPath.lastIndexOf('/') + 1);
+                    String fullPath = baseDir + relativeCoverPath;
 
-            if (relativeCoverPath != null) {
-                String opfPath = opfEntry.getName();
-                String baseDir = opfPath.substring(0, opfPath.lastIndexOf('/') + 1);
-                String fullPath = baseDir + relativeCoverPath;
+                    coverEntry = epubFile.getEntry(URLDecoder.decode(fullPath));
 
-                coverEntry = epubFile.getEntry(URLDecoder.decode(fullPath));
+                    if (coverEntry != null) {
+                        // 保存cover为缓存图片
+                        InputStream coverInputStream = epubFile.getInputStream(coverEntry);
 
-                if (coverEntry != null) {
-                    // 保存cover为缓存图片
-                    InputStream coverInputStream = epubFile.getInputStream(coverEntry);
+                        try (FileOutputStream fileOutputStream = new FileOutputStream(cover)) {
+                            byte[] buffer = new byte[1024];
+                            int length;
+                            while ((length = coverInputStream.read(buffer)) > 0) {
+                                fileOutputStream.write(buffer, 0, length);
+                            }
 
-                    try (FileOutputStream fileOutputStream = new FileOutputStream(cover)) {
-                        byte[] buffer = new byte[1024];
-                        int length;
-                        while ((length = coverInputStream.read(buffer)) > 0) {
-                            fileOutputStream.write(buffer, 0, length);
+                            // 通知更新封面
+                            WritableMap params = Arguments.createMap();
+                            params.putString("event", "COVER-READY");
+                            params.putMap("book", book.toWritableMap());
+                            Log.d("BookManager", "update cover event");
+                            sendEvent("BookChanged", params);
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
-
-                        // 通知更新封面
-                        WritableMap params = Arguments.createMap();
-                        params.putString("event", "COVER-READY");
-                        params.putMap("book", book.toWritableMap());
-                        Log.d("BookManager", "update cover event");
-                        sendEvent("BookChanged", params);
-                    } catch (Exception e) {
-                        e.printStackTrace();
                     }
                 }
             }
