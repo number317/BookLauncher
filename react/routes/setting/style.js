@@ -67,7 +67,16 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     borderBottomWidth: 1,
     borderColor: '#000',
-  }
+  },
+  appInfo: {
+    alignItems: 'center',
+  },
+  appIcon: {
+    width: 80,
+    height: 80,
+    borderWidth: 1,
+    borderColor: '#000',
+  },
 });
 
 export default styles;

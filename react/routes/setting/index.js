@@ -8,6 +8,7 @@ import Modal from '../../components/modal';
 import Gray16 from '../../components/gray16';
 import Icon from '../../components/icon';
 import Check from '../../components/check';
+import { AppIconView } from '../../components/native-components';
 import { setLocalData } from '../../components/global-store';
 import AppView from './app-view';
 import Store from '../../store';
@@ -183,7 +184,12 @@ const Setting = () => {
       {
         showModal === 'appInfo' && (
           <Modal handleClose={handleCloseModal} displayType="center">
-            <Text>appInfo</Text>
+            <View style={styles.appInfo}>
+              <AppIconView style={styles.appIcon} packageName="com.booklauncher" />
+              <Text>BookLauncher</Text>
+              <Text>created by cheon</Text>
+              <Text>https://github.com/cheon/BookLauncher</Text>
+            </View>
           </Modal>
         )
       }

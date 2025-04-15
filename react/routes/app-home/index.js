@@ -30,7 +30,6 @@ const AppHome = () => {
     appRows,
     appColumns,
     appCardSize,
-    appPages,
     appCurrentPage,
   } = rootStore;
 
