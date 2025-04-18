@@ -23,6 +23,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-start',
   },
+  back: {
+    marginLeft: -15,
+  },
   title: {
     fontSize: 20,
     fontWeight: 'bold',

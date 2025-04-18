@@ -67,9 +67,6 @@ const RootStore = () => useLocalObservable(() => ({
     this.bookCurrentPage = data;
   },
   async queryBookList() {
-    if (this.bookList.length > 0) {
-      return;
-    }
     this,this.setBookLoading(true);
     let columns;
     if (DEVICE_WIDTH <= 600) {

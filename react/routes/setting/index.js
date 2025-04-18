@@ -47,7 +47,7 @@ const Setting = () => {
             {
               rootStore.appMode === 'simple' && (
                 <TouchableOpacity onPress={() => navigation.navigate('App')}>
-                  <Icon name="left" size={40} />
+                  <Icon name="left" size={40} style={styles.back} />
                 </TouchableOpacity>
               )
             }
