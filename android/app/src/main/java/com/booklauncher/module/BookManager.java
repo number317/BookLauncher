@@ -343,11 +343,6 @@ public class BookManager extends ReactContextBaseJavaModule {
     }
 
     private String parseOpfForCoverPath(InputStream opfInputStream) throws Exception {
-        // 简单XML解析：这里以手动的方式解析 XML，可以替换成更强大的 XML 库（如 DOM 或 SAX）
-        // 解析内容应该是形如：
-        // <meta name="cover" content="cover-id" />
-        // 并通过 cover-id 找到对应的 <item> 内容
-        // <item id="cover-id" href="cover.jpg" media-type="image/jpeg" />
         BufferedReader reader = new BufferedReader(new InputStreamReader(opfInputStream));
         String line;
         String coverId = "cover";
@@ -357,7 +352,7 @@ public class BookManager extends ReactContextBaseJavaModule {
             if (line.contains("name=\"cover\"")) {
                 int contentIndex = line.indexOf("content=\"");
                 if (contentIndex != -1) {
-                    coverId = line.substring(contentIndex + 9, line.indexOf("\"", contentIndex + 9)).toLowerCase();
+                    coverId = line.substring(contentIndex + 9, line.indexOf("\"", contentIndex + 9));
                 }
             }
 
